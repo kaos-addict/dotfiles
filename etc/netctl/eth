@@ -1,0 +1,19 @@
+Description='Ethernet'
+Interface=enp7s0
+Connection=ethernet
+AutoWired=yes
+SkipNoCarrier=yes
+HostName=manja
+IP=static
+# Any valid iproute command can be placed in this array
+IPCustom=('addr add dev enp7s0 192.168.134.250/24 brd +' 'route add default via 192.168.134.254')
+DNS=('192.168.134.254' '8.8.4.4')
+# Set a priority for automatic profile selection
+#Priority=10
+#ExcludeAuto=no
+# For IPv6 static address configuration
+#IP6=dhcp
+# Address6=('2a01:e35:2427:e6b0:f66d:4ff:fe8e:ecf/64' 'fe80::f66d:4ff:fe8e:ecf/64')
+# Routes6=('')
+# Gateway6='2a01:e35:2427:e6b0::1'
+# DNS=('2a01:e00::2' '2a01:e00::1')

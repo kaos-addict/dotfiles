@@ -1,0 +1,9 @@
+### functions@Kaos:
+# Create new kcp package basics need pkgname as argument:
+mkpkg() {
+    if [ -z "$1" ] || [ -d "./$1" ];then exit 1;fi
+    mkdir "$1" && cd "$1" && pckcp -gc && sed -i "s/kaos-pkgbuild-proto/$1/g" PKGBUILD
+    echo -e "#$1\n" > README.md
+    kate -n README.md PKGBUILD
+}
+ 

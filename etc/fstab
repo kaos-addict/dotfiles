@@ -1,0 +1,32 @@
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a device; this may
+# be used with UUID= as a more robust way to name devices that works even if
+# disks are added and removed. See fstab(5).
+#
+# <file system>                           <mount point>  <type>  <options>  <dump>  <pass>
+UUID=F5F5-F8B9                            /boot          vfat    defaults,noatime 0       2
+LABEL=Manja /media/Manja    ext4    defaults,noatime,discard    0   2
+UUID=58173afc-5bf8-44e9-af18-0de4ae1307a2 /              xfs     defaults,noatime,discard 0       1
+UUID=1c4ebfdd-ae69-423e-8ef5-04cafdb4c5a9 /home          xfs     defaults,noatime,discard 0       2
+
+### Fixe
+LABEL=Swap      swap            swap    defaults,noatime,discard    0       0
+LABEL=Musique   /media/Musique  ext4    defaults,noatime    0   0
+LABEL=Remise    /media/Remise   ext4    defaults,noatime    0   0
+LABEL=Videos    /media/Videos   ext4    defaults,noatime    0   0
+LABEL=Travail   /media/Travail  ext4    defaults,noatime    0   0
+# No-auto
+LABEL=Demi      /media/Demi     ext4    defaults,noatime 0   0
+UUID=0CA0BA671E275BF9   /media/WinData  ntfs    defaults,noatime    0       2
+
+tmpfs                                     /tmp           tmpfs   defaults,noatime,mode=1777 0       0
+
+# Bind mounts
+/media/Remise   /home/mermouy/Remise    none    bind    0   0
+/media/Travail     /home/mermouy/Documents  none    bind    0   0
+/media/Musique     /home/mermouy/Musique  none    bind    0   0
+/media/Videos     /home/mermouy/Vidéos  none    bind    0   0
+/media/Demi/Images     /home/mermouy/Images none    bind    0   0
+/media/Travail/Téléchargements /home/mermouy/Téléchargements  none    bind    0   0
+###

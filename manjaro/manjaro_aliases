@@ -1,0 +1,7 @@
+### aliases@manjaro:
+#Create basic PKGBUILD file & basic vcs one & basic github one
+alias mkpkgbuild="cp /usr/share/pacman/PKGBUILD.proto ./PKGBUILD"
+alias mkb_git="cp -i /usr/share/pacman/PKGBUILD-vcs.proto PKGBUILD"
+
+# TODO: special github & sourceforge ones
+# alias mkb_github="cp -i /usr/share/pacman/PKGBUILD-vcs.proto PKGBUILD"
