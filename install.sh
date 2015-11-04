@@ -28,6 +28,16 @@ _etcinstall() {
     rsync -r -x -c -b -i -s etc/ /etc/ || return 1
 }
 
+### Git-config
+_gitconf() {
+    Name=""
+    Email=""
+    read -r -p "Enter your name" Name
+    if  [ -n ${Name} ];then sed -e "s/NAME/${Name}/g" perso/gitconfig ${TargetDir}/.gitconfig;fi
+    read -r -p "Enter your email address" Email
+    if  [ -n ${Email} ];then sed -i "s/EMAIL/${Email}/g" ${TargetDir}/.gitconfig;fi
+}
+
 ### Verify
 if [ -z "${1}" ];then   # If there's argument
     echo -e "ERROR:\n${0} needs a distribution name as argument\nExample:\n${0} manjaro" && exit 1
@@ -40,6 +50,7 @@ else
 	_etcinstall
 	if [ "${?}" = "1" ];then echo -e 'Shit happened while populating /etc !!! Sorry...';fi
     fi
+    if [ -f perso/gitconfig ];then _gitconf;fi
 fi
 
 exit 0
