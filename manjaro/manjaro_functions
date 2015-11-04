@@ -1,0 +1,15 @@
+### functions@Kaos:
+if [ "${XEDITOR}" = "" ];then export XEDITOR="kate -n";fi
+
+# Create new PKGBUILD with pkgname as argument:
+cpkgbuild() {
+    sed "s/NAME/${1}/" /usr/share/pacman/PKGBUILD.proto >> PKGBUILD
+}
+
+# Create new package need pkgname as argument:
+mkpkg() {
+    if [ -z "${1}" ] || [ -d "./${1}" ];then exit 1;fi
+    mkdir "${1}" && cd "${1}" && cpkgbuild ${1}
+    echo -e "#${1}\n" > README.md
+    ${XEDITOR} README.md PKGBUILD
+}
