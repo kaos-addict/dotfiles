@@ -14,9 +14,19 @@ _bashinstall() {
     if [ -f "${1}/post-${1}-install.sh" ]   # If exists, run post-install script
         then ./${1}/post-${1}-install.sh || return 1
     fi
+    echo -e 'Dot files installed!\nBye!'
     return 0
 }
 
+## /etc files voir peut-être etckeeper?
+_etcinstall() {
+    # Need root privileges
+    if [[ $EUID -ne 0 ]]; then
+	echo -e "\e[31mThis script must be run by root!\nExiting now...\e[0m"
+﻿	exit 1
+    fi
+    rsync -r -x -c -b -i -s etc/ /etc/ || return 1
+}
 
 ### Verify
 if [ -z "${1}" ];then   # If there's argument
@@ -25,8 +35,11 @@ elif [ ! -d "${1}" ];then   # If argument exist as a folder
     echo -e "ERROR:\nArgument is not an existing folder... (There's no "${1}" in $(basedir ${0}))...\nExiting..."
 else
     _bashinstall "${1}"
-    if [ "${?}" = "1" ];then echo -e 'Shit happened!!! Sorry...';fi
+    if [ "${?}" = "1" ];then echo -e 'Shit happened while "_bashinstall"!!! Sorry...';fi
+    if [ -d "etc/" ];then
+	_etcinstall
+	if [ "${?}" = "1" ];then echo -e 'Shit happened while populating /etc !!! Sorry...';fi
+    fi
 fi
 
-echo -e 'Dot files installed!\nBye!'
 exit 0
