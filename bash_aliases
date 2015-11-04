@@ -5,7 +5,6 @@ alias df='df -h'		# human-readable sizes
 alias free='free -m'		# show sizes in MB
 alias np='nano PKGBUILD'		# edit PKGBUILD file
 alias ns='nano SPLITBUILD'		# edit SPLITBUILD file
-alias upd='mirror-check && sudo pacman -Syu'		# System update
 alias dvdburn='growisofs -Z /dev/sr0 -R -J'		# Burn cd/dvd
 ###
 

@@ -1,7 +1,13 @@
+if [[ $- != *i* ]] ; then
+	# Shell is non-interactive.  Be done now!
+	return
+fi
+
 # Enable bash completion
 [ -f /etc/bash_completion ]; then
 	    . /etc/bash_completion
 fi
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 # Allow root windows:
 xhost +local:root > /dev/null 2>&1
@@ -30,6 +36,7 @@ export XEDITOR=kate		# Added a X version
 
 # Prompt:
 PS1='[\u@\h \W]\$ '
+
 
 # Source alias file if present:
 if [ -f .bash_aliases ]; then source .bash_aliases;fi

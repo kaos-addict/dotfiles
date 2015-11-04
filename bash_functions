@@ -31,7 +31,7 @@ replace () {
 
 ### Utilities
 # Extract any archive file
-extract() {
+ex() {
     if [ -f $1 ] ; then
         case $1 in
             *.tar.bz2)  tar xf $1      ;;
@@ -67,12 +67,11 @@ purgem3u() {
 ### Network
 # Copy directory over ssh as: pussh Myfolder ~/Myremotefolder example.com
 pussh(){
-tar czf - "${1}" | ssh @${3} tar xzf - -C ${2}
+    tar czf - "${1}" | ssh @${3} tar xzf - -C ${2}
 }
 
 # Create ssh tunnel as: createTunnel user host.com localport remoteport 
-createTunnel()
-{
+createTunnel() {
   if [ $# -eq 3 ]
   then
     user=$1
@@ -96,7 +95,7 @@ createTunnel()
   ssh -N -f $user@$host -L ${localPort}:${host}:${remotePort}
 }
 
-#  Ping a host until it responds, then play a sound, then exit
+#  Ping a host until it responds, then play a sound, then exit (need espeak)
 speakwhenup() { 
 [ "$1" ] && PHOST="$1" || return 1
 until ping -c1 -W2 $PHOST >/dev/null 2>&1 
@@ -159,6 +158,33 @@ mkpkg() {
     mkdir "$1" && cd "$1" && pckcp -gc && sed -i "s/kaos-pkgbuild-proto/$1/g" PKGBUILD
     echo -e "#$1\n" > README.md
     kate -n README.md PKGBUILD
+}
+
+colors() {
+	local fgc bgc vals seq0
+
+	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
+	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
+	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
+	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+
+	# foreground colors
+	for fgc in {30..37}; do
+		# background colors
+		for bgc in {40..47}; do
+			fgc=${fgc#37} # white
+			bgc=${bgc#40} # black
+
+			vals="${fgc:+$fgc;}${bgc}"
+			vals=${vals%%;}
+
+			seq0="${vals:+\e[${vals}m}"
+			printf "  %-9s" "${seq0:-(default)}"
+			printf " ${seq0}TEXT\e[m"
+			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
+		done
+		echo; echo
+	done
 }
 
 # Journald display helper
