@@ -45,3 +45,6 @@ alias cleancom="sed -i 's/#.*$//;/^$/d'
 
 # Get off comments
 alias cgrep="grep -E -v '^(#|$|;)'"
+
+# Git undo
+alias git-undo="git reset --soft HEAD^"
