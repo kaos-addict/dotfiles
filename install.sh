@@ -1,4 +1,5 @@
 #!/bin/bash
+# Simple installer for few dot files
 if [ -z "${1}" ];then
     echo -e "ERROR:\n${0} needs a distribution name as argument\nExample:\n${0} manjaro" && exit 1
 else
