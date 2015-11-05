@@ -1,0 +1,3 @@
+[submodule "Linux-DNS-server"]
+	path = Linux-DNS-server
+	url = https://github.com/Angristan/Linux-DNS-server.git

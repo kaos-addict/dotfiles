@@ -21,7 +21,7 @@ _bashinstall() {
 ## /etc files voir peut-être etckeeper?
 _etcinstall() {
     # Need root privileges
-    if [[ $EUID -ne 0 ]]; then
+    if [[ ${EUID} -ne 0 ]]; then
 	echo -e "\e[31mThis script must be run by root!\nExiting now...\e[0m"
 ﻿	exit 1
     fi
@@ -51,6 +51,7 @@ else
 	if [ "${?}" = "1" ];then echo -e 'Shit happened while populating /etc !!! Sorry...';fi
     fi
     if [ -f perso/gitconfig ];then _gitconf;fi
+    
 fi
 
 exit 0
