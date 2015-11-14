@@ -6,4 +6,3 @@ mkpkg() {
     echo -e "#$1\n" > README.md
     kate -n README.md PKGBUILD
 }
- 

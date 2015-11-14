@@ -5,3 +5,6 @@ alias mkb_git="cp -i /usr/share/pacman/PKGBUILD-vcs.proto PKGBUILD"
 
 # TODO: special github & sourceforge ones
 # alias mkb_github="cp -i /usr/share/pacman/PKGBUILD-vcs.proto PKGBUILD"
+
+# Update local pacman repo
+alias add-pkg="source /etc/makepkg.conf && cd /media/Remise/MonKaos && cp $PKGDEST/*.pkg.tar.xz . && repo-add ${*} MonKaos.db.tar.xz * || echo 'ERROR HAPPENED'"

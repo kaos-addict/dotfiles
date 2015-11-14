@@ -1,3 +1,6 @@
 ### aliases@Kaos: Create basic PKGBUILD files
 alias zenity="qarma"
 alias upd='mirror-check && sudo pacman -Syu && kcp -u'		# System update
+
+# Update local pacman repo
+alias add-pkg="source /etc/makepkg.conf && cd /media/Remise/MonKaos && cp $PKGDEST/*.pkg.tar.xz . && repo-add ${*} MonKaos.db.tar.xz * || echo 'ERROR HAPPENED'"

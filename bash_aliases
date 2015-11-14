@@ -13,18 +13,46 @@ alias ldir="ls -l | egrep '^d'"
 alias ll='ls -l --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto -F'
 alias la='ls -la --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto -F'
 
-# Encrypt/decrypt file with ssl
-alias encod="openssl aes-256-cbc -e -a -salt -in $@"
-alias decod="openssl aes-256-cbc -d -a -salt -in $@"
+# Human-readable sizes
+alias df='df -h'
 
+# Show sizes in MB
+alias free='free -m'
+
+# Encrypt file with ssl
+alias encssl="openssl aes-256-cbc -e -a -salt -in $@"
+
+# Decrypt file with ssl
+alias decssl="openssl aes-256-cbc -d -a -salt -in $@"
+
+# List dir with details, sorted by time, colored, with ISO dates, ...
+alias ls='ls -AlFhrt --time-style=long-iso --color=auto'
+
+# List all process
+alias psall='/usr/bin/ps aux'
+
+# Find in all process
+alias pg='/usr/bin/ps aux | grep'
 # Forget sudo? Re-run last command as root
 alias redo='\sudo !!'
+
+# TODO: Get aliases
+#alias alias-get='\wget -t 3 -q -O - "$@" https://'
 
 # Cp like with progress
 alias cpr="rsync --partial --progress --append"
 
 # Rm like with progress
 alias rmv="rsync --partial --progress --append --remove-sent-files"
+
+# Directory listing
+alias ldir="ls -l | egrep '^d'"
+
+# Make coloured grep
+#alias grep='grep -i --color'
+
+# Get off comments
+alias cgrep="grep -E -v '^(#|$|;)'"
 
 # Show me my ssh public keys
 alias ssh-showkeys="tail +1 ~/.ssh/*.pub"
@@ -39,12 +67,8 @@ alias shfunct='cgrep ~/.bash_functions'
 alias ducks='du -cks *|sort -rn|head -11'
 
 ##TODO: what's best of these two:
-
 # Clean comments and empty lines:
 alias cleancom="sed -i 's/#.*$//;/^$/d'"
 
 # Get off comments
 alias cgrep="grep -E -v '^(#|$|;)'"
-
-# Git undo
-alias git-undo="git reset --soft HEAD^"

@@ -1,4 +1,4 @@
-### Terminal
+### Terminal:
 # Add folder to path if not already exported
 pathadd() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
@@ -63,8 +63,9 @@ purgem3u() {
     mv $tmp $m3u
   done
 }
+### :Terminal
 
-### Network
+### Network:
 # Copy directory over ssh as: pussh Myfolder ~/Myremotefolder example.com
 pussh(){
     tar czf - "${1}" | ssh @${3} tar xzf - -C ${2}
@@ -104,8 +105,9 @@ do
 done
 espeak "$PHOST is up" >/dev/null 2>&1
 }
+### :Network
 
-### Man pages
+### Man pages:
 # Search
 mans () {
     man $1 | grep -iC2 --color=always $2 | less
@@ -115,7 +117,59 @@ mans () {
 qman () {
     man $1 | qarma --text-info --title="Man Page" --width=800 --height=800
 }
-###
+
+
+man() {
+	env \
+	LESS_TERMCAP_mb=$(printf "\e[1;34m") \
+	LESS_TERMCAP_md=$(printf "\e[1;34m") \
+	LESS_TERMCAP_me=$(printf "\e[0m") \
+	LESS_TERMCAP_se=$(printf "\e[0m") \
+	LESS_TERMCAP_so=$(printf "\e[1;30m") \
+	LESS_TERMCAP_ue=$(printf "\e[0m") \
+	LESS_TERMCAP_us=$(printf "\e[1;36m") \
+	man "$@"
+}
+### :Man Pages
+
+### Various Helpers:
+colors() {
+	local fgc bgc vals seq0
+
+	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
+	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
+	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
+	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+
+	# foreground colors
+	for fgc in {30..37}; do
+		# background colors
+		for bgc in {40..47}; do
+			fgc=${fgc#37} # white
+			bgc=${bgc#40} # black
+
+			vals="${fgc:+$fgc;}${bgc}"
+			vals=${vals%%;}
+
+			seq0="${vals:+\e[${vals}m}"
+			printf "  %-9s" "${seq0:-(default)}"
+			printf " ${seq0}TEXT\e[m"
+			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
+		done
+		echo; echo
+	done
+}
+### :Various Helpers
+
+### Administration:
+# Journald display helper
+yournal() {
+journalctl "${@}" | yad --text-info \
+--height 700 --width 600 \
+--image-path=/usr/share/icons/hicolor/16x16/apps \
+--window-icon=kdeapp --image=kaos --title=KalOg \
+--center --button=Close --wrap --tail --show-uri
+}
 
 # Limit memory usage of one process (needs qarma)
 # Use first argument as the process to limit 
@@ -148,50 +202,4 @@ do
    sleep 30
 done
 exit 0
-}
-
-### Kaos-only:
-
-# Create new kcp package basics need pkgname as argument:
-mkpkg() {
-    if [ -z "$1" ] || [ -d "./$1" ];then exit 1;fi
-    mkdir "$1" && cd "$1" && pckcp -gc && sed -i "s/kaos-pkgbuild-proto/$1/g" PKGBUILD
-    echo -e "#$1\n" > README.md
-    kate -n README.md PKGBUILD
-}
-
-colors() {
-	local fgc bgc vals seq0
-
-	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
-	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
-	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
-	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
-
-	# foreground colors
-	for fgc in {30..37}; do
-		# background colors
-		for bgc in {40..47}; do
-			fgc=${fgc#37} # white
-			bgc=${bgc#40} # black
-
-			vals="${fgc:+$fgc;}${bgc}"
-			vals=${vals%%;}
-
-			seq0="${vals:+\e[${vals}m}"
-			printf "  %-9s" "${seq0:-(default)}"
-			printf " ${seq0}TEXT\e[m"
-			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
-		done
-		echo; echo
-	done
-}
-
-# Journald display helper
-yournal() {
-journalctl "${@}" | yad --text-info \
---height 700 --width 600 \
---image-path=/usr/share/icons/hicolor/16x16/apps \
---window-icon=kdeapp --image=kaos --title=KalOg \
---center --button=Close --wrap --tail --show-uri
 }
