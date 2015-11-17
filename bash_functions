@@ -12,15 +12,10 @@ if [ -d $HOME/bin ];then pathadd $HOME/bin;fi
 # Make copy with .ori backup
 cpb() { cp $@{,.ori} ;}
 
-# Notify on command end
-notime(){
-($* ; notify-send "Command over" "$*")
-}
-
 ### Text
 # Find text in any file (find grep)
-fgr() {
-find . -name "${2:-*}" | xargs grep -l "$1"
+    fgr() {
+    find . -name "${2:-*}" | xargs grep -l "$1"
 }
 
 # Replace a text in all given files
@@ -171,7 +166,7 @@ journalctl "${@}" | yad --text-info \
 --center --button=Close --wrap --tail --show-uri
 }
 
-# Limit memory usage of one process (needs qarma)
+### Limit memory usage of one process (needs qarma/zenity)
 # Use first argument as the process to limit 
 # Optionaly add second arg the memory limit or default is 500M
 LimiT() {

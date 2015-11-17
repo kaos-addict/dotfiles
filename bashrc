@@ -4,9 +4,7 @@ if [[ $- != *i* ]] ; then
 fi
 
 # Enable bash completion
-[ -f /etc/bash_completion ]; then
-	    . /etc/bash_completion
-fi
+[ -f /etc/bash_completion ] && . /etc/bash_completion
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 # Allow root windows:
@@ -69,6 +67,6 @@ set_prompt () {
 PROMPT_COMMAND='set_prompt'
 
 # Source alias file if present
-[[ -f ~/.bash_aliases ]] && . ~/.bash_aliases   
+[[ -f $HOME/.bash_aliases ]] && . $HOME/.bash_aliases   
 # Source functionns file if present
-[[ -f ~/.bash_functions ]] && . ~/.bash_functions
+[[ -f $HOME/.bash_functions ]] && . $HOME/.bash_functions
