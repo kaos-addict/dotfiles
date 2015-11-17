@@ -70,3 +70,13 @@ PROMPT_COMMAND='set_prompt'
 [[ -f $HOME/.bash_aliases ]] && . $HOME/.bash_aliases   
 # Source functionns file if present
 [[ -f $HOME/.bash_functions ]] && . $HOME/.bash_functions
+
+### Everything below is run only once a day:
+Dfile="/tmp/$(date +%Y%m%d).sem"
+if [[ ! -e ${Dfile} ]]
+then
+    touch ${Dfile}
+## OnetimeStuff
+
+## /OnetimeStuff
+fi

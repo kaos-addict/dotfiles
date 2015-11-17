@@ -1,0 +1,2 @@
+# If activated run KnewOS
+[ -e $HOME/.config/KnewOS.log ] && KnewOS
