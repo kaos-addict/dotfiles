@@ -8,6 +8,7 @@ mkpkg() {
 }
 
 # Update/Create local pacman repo using /etc/makepkg.conf $PKGDEST value and hardlinks them to destination/
+# It also support git push if repo detected as a git repo
 # Needs existing and writable destination folder as argument or will exit.
 pkg2repo() {
 if [ $(which qarma) ];then
@@ -23,7 +24,8 @@ if [ $(which qarma) ];then
          for pkg in $(find $PKGDEST/ -type f -name "*.pkg.tar.xz")
              do ln -s ${pkg} ${Dir}/$(basename ${pkg})
          done
-        repo-add -f -n -d --nocolor "${Dir}/$(basename ${Dir}).db.tar.xz" $(find ${Dir} -type l -name "*.pkg.tar.xz") 2>&1 | qarma --title="Packages To Repo" --window-icon="octopi" --width=800 --height=600 --text-info --auto-scroll ||  return 1
+        repo-add -n -d --nocolor "${Dir}/$(basename ${Dir}).db.tar.xz" $(find ${Dir} -type l -name "*.pkg.tar.xz") 2>&1 | qarma --title="Packages To Repo" --window-icon="octopi" --width=800 --height=600 --text-info --auto-scroll ||  return 1
+        repo-add -f --nocolor "${Dir}/$(basename ${Dir}).files.tar.xz" $(find ${Dir} -type l -name "*.pkg.tar.xz") 2>&1 | qarma --title="Packages To Repo" --window-icon="octopi" --width=800 --height=600 --text-info --auto-scroll ||  return 1
     else
         qarma --error --title="Packages To Repo" --window-icon="octopi" --text="Cancelled by user..." --ok-label=Exit --timeout=3
         return 1
