@@ -1,3 +1,6 @@
 [submodule "Linux-DNS-server"]
 	path = Linux-DNS-server
 	url = https://github.com/Angristan/Linux-DNS-server.git
+[submodule "bash-it"]
+	path = bash-it
+	url = git@github.com:kaos-addict/bash-it.git
