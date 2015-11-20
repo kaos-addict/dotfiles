@@ -16,3 +16,6 @@
 [submodule "peru"]
 	path = peru
 	url = git@github.com:kaos-addict/peru.git
+[submodule "progress"]
+	path = progress
+	url = git@github.com:kaos-addict/progress.git
