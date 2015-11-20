@@ -10,3 +10,6 @@
 [submodule "powerline"]
 	path = powerline
 	url = git@github.com:kaos-addict/powerline.git
+[submodule "liquidprompt"]
+	path = liquidprompt
+	url = git@github.com:kaos-addict/liquidprompt.git
