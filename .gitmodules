@@ -40,3 +40,6 @@
 [submodule "workshop"]
 	path = workshop
 	url = git@github.com:kaos-addict/workshop.git
+[submodule "bocker"]
+	path = bocker
+	url = git@github.com:p8952/bocker.git
