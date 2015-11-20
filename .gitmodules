@@ -19,3 +19,6 @@
 [submodule "progress"]
 	path = progress
 	url = git@github.com:kaos-addict/progress.git
+[submodule "bashmanager"]
+	path = bashmanager
+	url = git@github.com:kaos-addict/bashmanager.git
