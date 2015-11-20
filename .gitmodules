@@ -7,3 +7,6 @@
 [submodule "pure-getopt"]
 	path = pure-getopt
 	url = git@github.com:kaos-addict/pure-getopt.git
+[submodule "powerline"]
+	path = powerline
+	url = git@github.com:kaos-addict/powerline.git
