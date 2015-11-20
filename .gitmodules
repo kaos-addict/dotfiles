@@ -31,3 +31,6 @@
 [submodule "rerun"]
 	path = rerun
 	url = git@github.com:kaos-addict/rerun.git
+[submodule "sub"]
+	path = sub
+	url = https://github.com/basecamp/sub.git
