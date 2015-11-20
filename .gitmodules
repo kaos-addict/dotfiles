@@ -28,3 +28,6 @@
 [submodule "composure"]
 	path = composure
 	url = git@github.com:kaos-addict/composure.git
+[submodule "rerun"]
+	path = rerun
+	url = git@github.com:kaos-addict/rerun.git
