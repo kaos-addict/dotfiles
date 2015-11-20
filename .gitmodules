@@ -4,3 +4,6 @@
 [submodule "bash-it"]
 	path = bash-it
 	url = git@github.com:kaos-addict/bash-it.git
+[submodule "pure-getopt"]
+	path = pure-getopt
+	url = git@github.com:kaos-addict/pure-getopt.git
