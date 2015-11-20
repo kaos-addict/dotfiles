@@ -13,3 +13,6 @@
 [submodule "liquidprompt"]
 	path = liquidprompt
 	url = git@github.com:kaos-addict/liquidprompt.git
+[submodule "peru"]
+	path = peru
+	url = git@github.com:kaos-addict/peru.git
