@@ -37,3 +37,6 @@
 [submodule "fonts"]
 	path = fonts
 	url = git@github.com:kaos-addict/fonts.git
+[submodule "workshop"]
+	path = workshop
+	url = git@github.com:kaos-addict/workshop.git
