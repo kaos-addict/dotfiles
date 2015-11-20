@@ -22,3 +22,6 @@
 [submodule "bashmanager"]
 	path = bashmanager
 	url = git@github.com:kaos-addict/bashmanager.git
+[submodule "bashful"]
+	path = bashful
+	url = git@github.com:kaos-addict/bashful.git
