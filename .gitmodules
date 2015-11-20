@@ -25,3 +25,6 @@
 [submodule "bashful"]
 	path = bashful
 	url = git@github.com:kaos-addict/bashful.git
+[submodule "composure"]
+	path = composure
+	url = git@github.com:kaos-addict/composure.git
