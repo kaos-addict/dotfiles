@@ -48,9 +48,6 @@ alias rmv="rsync --partial --progress --append --remove-sent-files"
 # Directory listing
 alias ldir="ls -l | egrep '^d'"
 
-# Make coloured grep
-#alias grep='grep -i --color'
-
 # Get off comments
 alias cgrep="grep -E -v '^(#|$|;)'"
 
@@ -69,6 +66,3 @@ alias ducks='du -cks *|sort -rn|head -11'
 ##TODO: what's best of these two:
 # Clean comments and empty lines:
 alias cleancom="sed -i 's/#.*$//;/^$/d'"
-
-# Get off comments
-alias cgrep="grep -E -v '^(#|$|;)'"
