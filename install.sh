@@ -23,7 +23,7 @@ fi
 PostInstall() {
 # Once identified it should run the appropriate distrib specific install-script
 case "$1" in 
-        "KaOS")DistribDir="${RunDir}/Distrib/KaOS"; [ -f ${DistribDir}/KaOS.post.install ] && chmod +x ${DistribDir}/KaOS.post.install && K_PostInstall;;
+        "KaOS")DistribDir="${RunDir}/Distrib/KaOS"; [ -f ${DistribDir}/KaOS-post-install.sh ] && chmod +x ${DistribDir}/KaOS-post-install.sh && K_PostInstall || exit 1;;
         "Manjaro") Echo "Doing Manja stuff";;
         *) echo "Distribution not (yet?) supported" && return 1;;
 esac
@@ -31,9 +31,9 @@ esac
 
 K_PostInstall() {
 # Not sure how it should be launch...
-kdialog --title "KaOS Dotfiles Restore" --warningcontinueyesno "Launching KaOS Linux Install script?"
+kdialog --title "KaOS Dotfiles Restore" --text "Launching KaOS Linux Install script?" --textbox ${DistribDir}/KaOS-post-install.sh
 # Run install script?
-[ "$?" = "0" ] && bash -c ${DistribDir}/KaOS.post.install || return 1
+[ "$?" = "0" ] && bash -c ${DistribDir}/KaOS-post-install.sh || return 1
 }
 
 ## Bash files

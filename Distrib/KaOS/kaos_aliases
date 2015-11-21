@@ -1,0 +1,4 @@
+### aliases@Kaos: Create basic PKGBUILD files
+[ -x /usr/bin/qarma ] && alias zenity="qarma"
+
+alias upd='mirror-check && sudo pacman -Syu && kcp -u'		# System update

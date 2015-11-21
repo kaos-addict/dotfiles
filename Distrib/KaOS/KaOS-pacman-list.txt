@@ -1,0 +1,4 @@
+TRUE htop
+TRUE base-devel
+TRUE gimp
+TRUE pacmanlogviewer
