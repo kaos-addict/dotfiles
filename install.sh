@@ -17,21 +17,30 @@ then
         [ "${Distrib}" = "KaOS" ] && [  -d ${RunDir}/Distrib/KaOS ] && [ -d ${RunDir}/Desktops/Plasma ] && \
         _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox' || exit 1
 else 
-        exit 1
+        exit 1  
 fi
 
-PostInstall() {
+_error() {
+        kdialog --error "$1"
+}
+
+_errorexit() {
+        kdialog --error "$1" && exit 0
+}
+
+_postinstall() {
 # Once identified it should run the appropriate distrib specific install-script
-case "$1" in 
-        "KaOS")DistribDir="${RunDir}/Distrib/KaOS"; [ -f ${DistribDir}/KaOS-post-install.sh ] && chmod +x ${DistribDir}/KaOS-post-install.sh && K_PostInstall || exit 1;;
-        "Manjaro") Echo "Doing Manja stuff";;
+case $1 in 
+        KaOS)DistribDir="${RunDir}/Distrib/KaOS"; [ -f ${DistribDir}/KaOS-post-install.sh ] && chmod +x ${DistribDir}/KaOS-post-install.sh && K_postinstall || exit 1;;
+        Manjaro) echo "Doing Manja stuff";;
         *) echo "Distribution not (yet?) supported" && return 1;;
 esac
 }
+export -f _postinstall
 
-K_PostInstall() {
+K_postinstall() {
 # Not sure how it should be launch...
-kdialog --title "KaOS Dotfiles Restore" --text "Launching KaOS Linux Install script?" --textbox ${DistribDir}/KaOS-post-install.sh
+kdialog --title "Run this KaOS Dotfiles Restore script?" --textbox "${DistribDir}/KaOS-post-install.sh" 800 600
 # Run install script?
 [ "$?" = "0" ] && bash -c ${DistribDir}/KaOS-post-install.sh || return 1
 }
@@ -69,7 +78,7 @@ _gitconf() {
     if  [ -n ${Email} ];then sed -i "s/EMAIL/${Email}/g" ${TargetDir}/.gitconfig;fi
 }
 
-PersoInstall() {
+_configinstall() {
 
 # VARIABLES
 Savef=mermouy.dot
@@ -95,8 +104,16 @@ return 0
 }
 
 # Control what step to do
+Steps=( '_postinstall' '_bashinstall' '_configinstall' '_etcinstall' )
+# Just a translation for humans
+Act=( 'Post Installation and update.' 'Bash files installation' 'Config files and personnal files restoration.' 'System files restoration' )
+Steps2do=$(kdialog --title "What should I do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on )
+
 case "$1" in
-        "") PostInstall ${Distrib};;
-        "Postinstall") _bashinstall;;
-        "LastInstall") echo "Last install part";;
+        "") for a in ${Steps2do[@]}; do ${a} ${Distrib}) || _errorexit "Error while ${a}"; done
+        read;;
+        "--all|-a") for a in ${Steps2do[@]}${Act[@]}; do ${a} ${Distrib} || _error "Errors happened while ${Act}";done ;;
+        "--postinstall|-p") for Act in "_bashinstall  _configinstall _etcinstall|-e" ; do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}";done ;;
+        "system|-s") _etcinstall ${Distrib} || _error "Errors happened";;
+        *) echo "...Ok...";;
 esac
