@@ -1,13 +1,44 @@
 #!/bin/bash
 # Simple installer for few dot files
-# Put basic files (bashrc) then add distrib specific one (kaos/kaos.bashrc) in ${TargetDir}.bashrc
+# TODO: Put basic files (bashrc) then add distrib specific one (kaos/kaos.bashrc) in ${TargetDir}.bashrc
 #                 (bash_aliases)                         (kaos/kaos.bash_aliases) in ${TargetDir}.bash_aliases
+# Then add Desktop ones
 # Need only distrib name as arg (must be the same as folder's name)
+# For now this script is specific to me on my KaOS Linux system and is targeted to quick restore my desktop environment
+# But it should be adaptable and usable for more/any linux distro next.
 
 TargetDir="${HOME}"
+RunDir="$(dirname $0)"
+
+# For now this just verify we are on a KaOS system but it shoud next identify which distrib it is
+if [ -f /etc/lsb-release ]
+then
+        Distrib=$(grep "DISTRIB_ID=" /etc/lsb-release | cut -d '=' -f 2)
+        [ "${Distrib}" = "KaOS" ] && [  -d ${RunDir}/Distrib/KaOS ] && [ -d ${RunDir}/Desktops/Plasma ] && \
+        _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox' || exit 1
+else 
+        exit 1
+fi
+
+PostInstall() {
+# Once identified it should run the appropriate distrib specific install-script
+case "$1" in 
+        "KaOS")DistribDir="${RunDir}/Distrib/KaOS"; [ -f ${DistribDir}/KaOS.post.install ] && chmod +x ${DistribDir}/KaOS.post.install && K_PostInstall;;
+        "Manjaro") Echo "Doing Manja stuff";;
+        *) echo "Distribution not (yet?) supported" && return 1;;
+esac
+}
+
+K_PostInstall() {
+# Not sure how it should be launch...
+kdialog --title "KaOS Dotfiles Restore" --warningcontinueyesno "Launching KaOS Linux Install script?"
+# Run install script?
+[ "$?" = "0" ] && bash -c ${DistribDir}/KaOS.post.install || return 1
+}
 
 ## Bash files
 _bashinstall() {
+# For now only restore few dotfiles but then should ask for lib to use etc...
     cat bashrc ${1}/${1}.bashrc > ${TargetDir}/.bashrc || return 1	# Copy bashrc
     cat bash_aliases ${1}/${1}_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases || return 1    # Create .bash_aliases
     cat bash_functions ${1}/${1}_functions perso/perso_functions > ${TargetDir}/.bash_functions || return 1    # Create .bash_functions
@@ -38,20 +69,34 @@ _gitconf() {
     if  [ -n ${Email} ];then sed -i "s/EMAIL/${Email}/g" ${TargetDir}/.gitconfig;fi
 }
 
-### Verify
-if [ -z "${1}" ];then   # If there's argument
-    echo -e "ERROR:\n${0} needs a distribution name as argument\nExample:\n${0} manjaro" && exit 1
-elif [ ! -d "${1}" ];then   # If argument exist as a folder
-    echo -e "ERROR:\nArgument is not an existing folder... (There's no "${1}" in $(basedir ${0}))...\nExiting..."
-else
-    _bashinstall "${1}"
-    if [ "${?}" = "1" ];then echo -e 'Shit happened while "_bashinstall"!!! Sorry...';fi
-    if [ -d "etc/" ];then
-	_etcinstall
-	if [ "${?}" = "1" ];then echo -e 'Shit happened while populating /etc !!! Sorry...';fi
-    fi
-    if [ -f perso/gitconfig ];then _gitconf;fi
-    
-fi
+PersoInstall() {
 
-exit 0
+# VARIABLES
+Savef=mermouy.dot
+Sext=tar.bz2
+Source=/media/Remise/save
+Wkdir=/tmp
+
+# Extract savefiles
+cd ${Wkdir}
+case ${Sext} in
+    tar.bz2) tar -xvjf ${Source}/${Savef}.${Sext} || echo "Problem while extracting tar.bz2 savefiles";;
+    tar.gz) tar -xvzf ${Source}/${Savef}.${Sext} || echo "Problem while extracting tar.gz savefiles";;
+    tar.xz) tar -xvJf ${Source}/${Savef}.${Sext} || echo "Problem while extracting tar.xz savefiles";;
+esac
+
+### TODO: Other dot files
+
+### TODO: confirmation dialog (qarma?)
+
+# .config dir TODO:and personnal stuff
+rsync --remove-source-files .config/ ${HOME}/.config/ && find -type d -empty -delete
+return 0
+}
+
+# Control what step to do
+case "$1" in
+        "") PostInstall ${Distrib};;
+        "Postinstall") _bashinstall;;
+        "LastInstall") echo "Last install part";;
+esac
