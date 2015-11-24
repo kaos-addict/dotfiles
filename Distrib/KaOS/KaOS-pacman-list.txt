@@ -1,4 +1,34 @@
-TRUE htop
-TRUE base-devel
-TRUE gimp
-TRUE pacmanlogviewer
+htop
+gimp
+pacmanlogviewer
+hunspell-fr
+cutemarked
+dfc
+docker
+dolphin-plugins
+encfs
+filelight
+flashplugin
+google-chrome
+firefox
+firefox-i18n-fr
+gparted
+gstreamer-libde265
+gtkspell
+handbrake
+kaccount-providers
+kdenetwork-filesharing
+kodi
+krita
+mtools
+qwinff
+sqliteman
+ttf-ms-fonts
+ufw-frontend
+zim
+libdvdcss
+openjdk
+gitter
+rftg
+rssguard
+tmux
