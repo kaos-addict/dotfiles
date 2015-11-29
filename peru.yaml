@@ -2,6 +2,14 @@ imports:
         Liquidprompt: prompt/liquidprompt/
         Powerline: prompt/powerline/powerline
         Fonts: fonts/
+        PureGetopt: prompt/pure-getopt
+        Composure: prompt/composure
+        BashManager: prompt/bashmanager
+        BashFul: prompt/bashful
+        Bocker: prompt/bocker
+        BashIt: prompt/bash-it
+        Progress: prompt/progress
+        WorkShop: prompt/workshop
         
 git module Liquidprompt:
         url: git://github.com/nojhan/liquidprompt
@@ -11,3 +19,26 @@ git module Powerline:
 
 git module Fonts:
         url: git://github.com/powerline/fonts
+
+git module PureGetopt:
+        url: git://github.com/agriffis/pure-getopt.git
+
+git module Composure:
+        url: git://github.com/erichs/composure.git
+
+git module BashManager:
+        url: git://github.com/lingtalfi/bashmanager.git
+git module BashFul:
+        url: git://github.com/jmcantrell/bashful.git
+        
+git module Bocker:
+        url: git://github.com/fafik23/bocker.git
+        
+git module BashIt:
+        url: git://github.com/Bash-it/bash-it.git
+
+git module Progress:
+        url: git://github.com/Xfennec/progress.git
+
+git module WorkShop:
+        url: git://github.com/Mosai/workshop.git
