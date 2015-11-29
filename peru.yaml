@@ -1,0 +1,13 @@
+imports:
+        Liquidprompt: prompt/liquidprompt/
+        Powerline: prompt/powerline/powerline
+        Fonts: fonts/
+        
+git module Liquidprompt:
+        url: git://github.com/nojhan/liquidprompt
+
+git module Powerline:
+        url: git://github.com/powerline/powerline
+
+git module Fonts:
+        url: git://github.com/powerline/fonts
