@@ -119,20 +119,23 @@ PkgPostInstall() {
 }
 
 AskCustom() {
-        ${yad} --text="A custom repo file has been found and the corresponding directory exist too; should I add this repo to /etc/pacman.conf ?" --text-info --filename=${Distrib}/${Distrib}.custom.repo --editable 
+        ${yad} --text="A custom repo file has been found and the corresponding directory exist too; should I add this repo to /etc/pacman.conf ?" --text-info --filename=${K_Dir}/${Distrib}.custom.repo --editable 
 }
 
 AddCustomRepo() {
-        # Run only if custom file exist
-        [ -f "${Distrib}/${Distrib}.custom.repo" ] && AskCustom || return 1
+        Repodir=$(grep "Server =" ${K_Dir}/${Distrib}.custom.repo | cut -d "=" -f2 | sed 's# file://##') && [ -d ${Repodir} ] && AskCustom || return 1
         if [ "$?" = "0" ];then
-                cat ${Distrib}/${Distrib}.custom.repo >> /etc/pacman.conf 
+                kdesu -c "cat ${K_Dir}/${Distrib}.custom.repo >> /etc/pacman.conf "
         else
                 return 1
         fi
 }
 
 ### Main script launching Functions
+
+# If custom repo file is found ask to add it before anything else
+[ -f "${K_Dir}/${Distrib}.custom.repo" ] && AddCustomRepo
+
 # Verify if first update has been run
 if [ ! -f ${IFile} ] || [ -z "$(grep "update" ${IFile})" ];then
         FirstUpdate
