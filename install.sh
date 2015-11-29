@@ -51,10 +51,25 @@ KaOS_postinstall() {
 _bashinstall() {
 # For now only restore few dotfiles but then should ask for lib to use etc...
         read
-    cat bashrc ${1}/${1}.bashrc > ${TargetDir}/.bashrc || return 1	# Copy bashrc
-    cat bash_aliases ${1}/${1}_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases || return 1    # Create .bash_aliases
-    cat bash_functions ${1}/${1}_functions perso/perso_functions > ${TargetDir}/.bash_functions || return 1    # Create .bash_functions
-    if [ -f "${1}/post-${1}-install.sh" ]   # If exists, run post-install script
+        # Save existing files
+        if [ -f $HOME/.bashrc ];then cpb $HOME/.bashrc;fi
+        if [ -f $HOME/.bash_aliases ];then cpb $HOME/.bash_aliases;fi
+        if [ -f $HOME/.bash_functions ];then cpb $HOME/.bash_functions;fi
+        
+        cat bashrc ${1}/${1}.bashrc > ${TargetDir}/.bashrc || return 1	# Copy bashrc
+        cat bash_aliases ${1}/${1}_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases || return 1    # Create .bash_aliases
+        cat bash_functions ${1}/${1}_functions perso/perso_functions > ${TargetDir}/.bash_functions || return 1    # Create .bash_functions
+        
+        # Want to boost bash?
+        # Awesome fonts?
+        if [ -d fonts ];then ${yad} --text='Do you want to install extras and awesome fonts?'
+        if  [ "$?" = "0" ];then ${_terminal} -e "./install.sh";fi
+        
+        # TODO: better getopt?
+        # Liquidpromt?
+        # powerline?
+        
+        if [ -f "${1}/post-${1}-install.sh" ]   # If exists, run post-install script
         then ./${1}/post-${1}-install.sh || return 1
     fi
     echo -e 'Dot files installed!\nBye!'
