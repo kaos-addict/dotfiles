@@ -12,7 +12,7 @@ yad="yad --icon-theme=midna --window-icon=kaos.svg --title=$(basename $0 .sh) --
 # Make copy with .ori backup
 cpb() { cp -v $@{,.ori} ;}
 
-### Functions
+### Utils Functions
 _error() {
         kdialog --error "$1"
 }
@@ -118,8 +118,22 @@ PkgPostInstall() {
         echo "post" >> ${IFile}
 }
 
+AskCustom() {
+        ${yad} --text="A custom repo file has been found and the corresponding directory exist too; should I add this repo to /etc/pacman.conf ?" --text-info --filename=${Distrib}/${Distrib}.custom.repo --editable 
+}
+
+AddCustomRepo() {
+        # Run only if custom file exist
+        [ -f "${Distrib}/${Distrib}.custom.repo" ] && AskCustom || return 1
+        if [ "$?" = "0" ];then
+                cat ${Distrib}/${Distrib}.custom.repo >> /etc/pacman.conf 
+        else
+                return 1
+        fi
+}
+
 ### Main script launching Functions
-# Verify if first update has been run 
+# Verify if first update has been run
 if [ ! -f ${IFile} ] || [ -z "$(grep "update" ${IFile})" ];then
         FirstUpdate
 else
