@@ -10,6 +10,7 @@ imports:
         BashIt: prompt/bash-it
         Progress: prompt/progress
         WorkShop: prompt/workshop
+        PacApt: pacapt/
         
 git module Liquidprompt:
         url: git://github.com/nojhan/liquidprompt
@@ -42,3 +43,6 @@ git module Progress:
 
 git module WorkShop:
         url: git://github.com/Mosai/workshop.git
+
+git module PacApt:
+        url: git://github.com/icy/pacapt
