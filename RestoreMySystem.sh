@@ -1,12 +1,46 @@
 #!/bin/bash
-# Simple installer for few dot files
 # Put basic files (bashrc) then add distrib specific one (kaos/kaos.bashrc) in ${TargetDir}.bashrc
 #                 (bash_aliases)                         (kaos/kaos.bash_aliases) in ${TargetDir}.bash_aliases
 # Then add Desktops ones
-# For now this script is specific to me on my KaOS Linux system and is targeted to quick restore my desktop environment
-# But it should be adaptable and usable for more/any linux distro next.
+# Work In Progress: For now this script is specific to me on my KaOS Linux system
+# and is targeted to quick restore my desktop environment,
+# But it should be adaptable and usable for more/any linux distro in the future.
 
-Usage=$(cat << EOF
+### Some variables
+
+TargetDir="${HOME}"
+RunDir="$(dirname $0)"
+DesktopList="Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4"
+WinIcon="${RunDir}/pix/Restore.svg"
+Steps=( '_postinstall' '_bashinstall' '_configinstall' '_etcinstall' )
+RestoreImg="${RunDir}/pix/Restore-Logo"
+Confile="${TargetDir}/.config/$0.log"
+
+###
+### Few Utils-functions
+
+# Test display with one of xdialogs or simply echo usage
+UsageDisplay() {
+        if [ "${Dial}" = "/usr/bin/yad" ];then
+                Usage | /usr/bin/yad --title="'$(basename $0 .sh)' Help Display" \
+                --window-icon=${WinIcon} --center --text-align=fill \
+                --text="<b>Here you can see usage of </b>'$(basename $0 .sh)'<b> script:</b>\n" \
+                --text-info --width 1050 --height 600 --button=gtk-close:0 \
+                --image="${RestoreImg}-yad.png" --dialog-sep
+        elif [ "${Dial}" = "/usr/bin/zenity" ] || [ "${Dial}" = "/usr/bin/qarma" ];then
+                Usage > .$0.tmp
+                ${Dial} --title="$(basename $0 .sh)" --window-icon=${WinIcon} \
+                --text="$0 Help Display" --text-info --filename=".$0.tmp"
+        elif [ "${Dial}" = "/usr/bin/kdialog" ];then
+                ${Dial} --title "$(basename $0 .sh)" --window-icon=${WinIcon} \
+                --detailederror "$0 Help Display" "$(Usage)"
+        else
+                Usage && exit 1
+        fi
+}
+
+Usage() {
+        cat << EOF
 $0 [Step] [--only]
 Each Step include the Steps before, where Steps are:
         postinstall: 
@@ -24,7 +58,7 @@ Each Step include the Steps before, where Steps are:
         
         --userinstall | -u : Run all restoration steps from userinstall even if they have been already ran.
         
-        --etcinstall | -e : Run all restoration steps from etcinstall even if they have been already ran.
+        --etcinstall | -e : Run all restoration steps from etcinstall even if they have been already ran. (Cannot be used with the -o option)
         
 Then if you add the --only or -o as second arg, it will run only the named Step
 e.g: 
@@ -32,58 +66,53 @@ $ $0 --bashinstall --only # or
 $ $0 -b -o
 will run only the bashinstall step, even if it has been already ran.
 EOF
-)
-
-TargetDir="${HOME}"
-RunDir="$(dirname $0)"
-yad=$(which yad)
-DesktopList="Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4"
-WinIcon="${RunDir}/pix/Restore.svg"
-
-# First verify we can dialog thru X
-if [ -z "$(which yad)" ] && [ -z $(which kdialog) ] && [ -z $(which zenity) ];then
-        echo "Sorry, this script need kdialog or yad or zenity to run."
-        exit 1
-fi
-
-Dial=$($(which yad) || $(which zenity) || $(which kdialog))
-
-# Create some memory file
-Confile="$HOME/.config/${Distrib}-restore.log"
-if [ ! -f "${Confile}" ];then
-        echo "">>${Confile}
-fi
+}
 
 # Error message
 _error() {
-        if [ "${Dial}" = "yad" ];then
-                yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}"
-        elif [ "${Dial}" = "zenity" ] || [ "${Dial}" = "qarma" ];then
-                zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}"
-        elif [ "${Dial}" = "kdialog" ];then
-                kdialog --error "$1"
-        else
-                echo -e "$1"
-        fi         
+        if [ "${Dial}" = "/usr/bin/yad" ];then yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}"
+        elif [ "${Dial}" = "/usr/bin/zenity" ] || [ "${Dial}" = "qarma" ];then zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}"
+        elif [ "${Dial}" = "/usr/bin/kdialog" ];then kdialog --error "$1"
+        else echo -e ${Red}"$1"${C_Off}
+        fi
 }
 
 # Error message and exit
 _errorexit() {
-        if [ "${Dial}" = "yad" ];then
-                yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}" && exit 0;
-        elif [ "${Dial}" = "zenity" ] || [ "${Dial}" = "qarma" ];then
-                zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}" && exit 0;
-        elif [ "${Dial}" = "kdialog" ];then
-                kdialog --error "$1" && exit 0;
-        else
-                echo -e "$1" && exit 0;
-        fi         
+        if [ "${Dial}" = "/usr/bin/yad" ];then yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}" && exit 0;
+        elif [ "${Dial}" = "/usr/bin/zenity" ] || [ "${Dial}" = "qarma" ];then zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}" && exit 0;
+        elif [ "${Dial}" = "/usr/bin/kdialog" ];then kdialog --error "$1" && exit 0;
+        else echo -e ${Red}"$1"${C_Off} && exit 0; fi  
 }
 
 # Make copy with .ori backup
 cpb() { cp $@{,.ori} ;}
 
+###
+### Verify what is available, passed args etc...
+
+ # Verify xdialog is possible
+Dialist="yad zenity kdialog xdialog" # Usable interfaces, first found used:
+for app in ${Dialist}; do Dial="$(which ${app})" && break; done
+
+# If none found exit with error message
+[ -z "${Dial}" ] && echo -e ${BRed}"Error...\n${Red}You need at least one of ${Green}'${Dialist}' ${Red}to run this script...\n${BYellow}Exiting...${C_Off}" && exit 1;
+
+ # Need root privileges
+if [[ ${EUID} -ne 0 ]];then
+        _errorexit '<b>This script must be run by root!</b><br><br>You Should run with "sudo" prefix...<br><br>Exiting now...' || echo -e "\e[31mThis script must be run by root\!\nExiting now...\e[0m"
+        exit 2
+fi
+    
+# Verify bash_colors are here
+if [ ! -f ./bash_colors ];then 
+        echo -e 'ERROR! Are you sure you downloaded full archive?\Exiting...'
+        exit 1 
+else . ./bash_colors
+fi
+
 # For now this just verify we are on a KaOS system but it shoud next identify which distrib it is
+GetDistrib() {
 if [ -f /etc/lsb-release ]
 then
         Distrib=$(grep "DISTRIB_ID=" /etc/lsb-release | cut -d '=' -f 2)
@@ -94,37 +123,48 @@ then
                         else
                                 _errorexit "Sorry but Distribution can't be identified or some folders are missing..."
                         fi
+                        ;;
         "Manjaro")if [  -d ${RunDir}/Distrib/Manjaro ];then
                                         _echo="${yad} --title='${Distrib} Dotfiles Restore' --text"
                                         _Desktop=$(AskDesktop)
                                  else
                                         _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
                                 fi
+                                ;;
         "Debian")if [  -d ${RunDir}/Distrib/Debian ];then
                                         _echo="${yad} --title='${Distrib} Dotfiles Restore' --text"
                                         _Desktop=$(AskDesktop)
                                 else
                                         _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
                                 fi
+                                ;;
         "Ubuntu")if [  -d ${RunDir}/Distrib/Ubuntu ];then
                                         _echo="$(which zenity) --title='${Distrib} Dotfiles Restore' --text"
                                         _Desktop=$(AskDesktop)
                                 else
                                         _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
-                                fi
-        *) echo "/etc/lsb-release file not found, or distribution cannot be identified... Exiting..."
-        exit 1
+                                fi;;
+        *) echo ${Red}"Distribution cannot be identified...\n${BYellow}Exiting..."${C_Off}
+        exit 1;;
+        esac
+else
+        echo -e ${Green}"/etc/lsb-release ${Red}file not found\n... ${BYellow}Exiting..."${C_Off}
+        exit 2
 fi
+}
+
+###
+### Script functions
 
 # Once identified it should run the appropriate distrib specific install-script
 _postinstall() {
 case "$1" in 
         "KaOS")DistribDir="${RunDir}/Distrib/$1"
-                [ -f ${DistribDir}/$1-post-install.sh ] && chmod +x ${DistribDir}/$1-post-install.sh && $1_postinstall || exit 1;;
-        "Manjaro") echo "Doing Manja stuff... Soon...";;
-        "Debian") echo "First install pacapt... Soon...";;
-        "Ubuntu") echo "First install pacapt... Soon...";;
-        *) echo "Distribution not (yet?) supported" && return 1;;
+                [ -f ${DistribDir}/$1-post-install.sh ] && chmod +x ${DistribDir}/$1-post-install.sh && $1_postinstall || exit 1 ;;
+        "Manjaro") echo ${BYellow}"Doing Manja stuff... Soon..."${C_Off}; return 1 ;;
+        "Debian") echo ${BYellow}"First install pacapt... Soon..."${C_Off}; return 1 ;;
+        "Ubuntu") echo ${BYellow}"First install pacapt... Soon..."${C_Off}; return 1 ;;
+        *) echo -e ${Red}"Distribution not ${BRed}(yet?)${Red} supported...\n${BYellow}Exiting..."${C_Off} && return 1 ;;
 esac
 }
 
@@ -173,21 +213,16 @@ _bashinstall() {
         # Liquidpromt?
         # powerline?
         
-        if [ -f "${1}/post-${1}-install.sh" ]   # If exists, run post-install script
-        then echo -e "Running post install script now..." && ./${1}/post-${1}-install.sh || return 1
-    fi
+        if [ -f "${1}/post-${1}-install.sh" ]  
+        then echo -e ${BYellow}"Running post install script now..."${C_Off}; ./${1}/post-${1}-install.sh || return 1; fi
     echo -e 'Dot files installed!\nBye!'
     return 0
 }
 
 ## /etc files voir peut-être etckeeper?
 _etcinstall() {
-    # Need root privileges
-    if [[ ${EUID} -ne 0 ]]; then
-	echo -e "\e[31mThis script must be run by root\!\nExiting now...\e[0m"
-﻿	exit 1
-    fi
-    rsync -r -x -c -b -i -s etc/ /etc/ || return 1
+    _error "We should have ran: rsync -r -x -c -b -i -s etc/ /etc/ || return 1"
+    return 0
 }
 
 ### Git-config
@@ -227,41 +262,70 @@ _istatus() {
         [ -n "$(grep $1 ${Confile})" ] && echo off || echo on
 }
 
-# Control what step to do
-Steps=( '_postinstall' '_bashinstall' '_configinstall' '_etcinstall' )
-Steps2do=( $(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null) )
+# Create some memory file
+if [ ! -f "${Confile}" ];then
+        echo "">>${Confile}
+fi
 
+# If no argument given verify what's run and what's not
+AskWhat2run() {
+# Control what step to do
+Steps2do=( $(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null) )
+}
+
+###
+### Main Run
+
+# Find used distribution
+GetDistrib || _errorexit "Unable to find out the running distribution..."
+
+# Control and apply aruments if there are 
 case "$1" in
-        "--postinstall" | "-p") if [ -z "$2" ];then
-        for Act in "_bashinstall  _userinstall _etcinstall" 
+        "--postinstall" | "-p") 
+        if [ -z "$2" ];then
+        for Act in "_postinstall _bashinstall  _userinstall _etcinstall" 
                 do ${Act} ${Distrib} || _error "Errors happened while ${Act}"
         done
         elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
                 _postinstall ${Distrib} || _error "Errors happened while running post-install process."
         fi
         ;;
-        "--bashinstall" | "-b") if [ -z "$2" ];then
-        for Act in "_bashinstall  _userinstall _etcinstall" 
-                do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}"
-        done 
-        elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
-                _bashinstall ${Distrib} || _error "Errors happened while running post-install process."
+        "--bashinstall" | "-b") 
+        if [ -z "$2" ];then
+        for Act in "_bashinstall  _userinstall _etcinstall"; do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}"; done 
+        elif [ -n "$2" ];then
+                _bashinstall ${Distrib} || _errorexit "Errors happened while running bashinstall process."
         fi
         ;;
-        "--userinstall" | "-u") if [ -z "$2" ];then
+        "--userinstall" | "-u") 
+        if [ -z "$2" ];then
         for Act in " _userinstall _etcinstall" 
                 do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}"
         done 
         elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
-                _bashinstall ${Distrib} || _error "Errors happened while running post-install process."
+                _bashinstall ${Distrib} || _errorexit "Errors happened while running userinstall process."
         fi
         ;;
-        "--etcinstall" | "-e")
-        _etcinstall ${Distrib} || _error "Errors happened"
+        "--etcinstall" | "-e") 
+        if [ -z "$2" ];then
+                _etcinstall ${Distrib} || _errorexit "Errors happened while running etcinstall process."
+        elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
+                _errorexit "You cannot use the --only or -o flag when using --etcinstall or -e one.<br>See this script usage with:<br>$ $0 --help<br>Or<br>$ $0 -h<br>Or<br>$ $0 --usage"
+        fi
         ;;
-        *) 
+        "") 
+        AskWhat2run 
         for a in ${Steps2do[@]}
                 do $(eval ${a} ${Distrib}) || _error "Error while ${a}"
         done
+        ;;
+        "--help" | "-h") 
+        UsageDisplay
+        exit 0
+        ;;
+        *) 
+        _error '<b>Arguments not regognized...</b><br><br>You should look at usage for this script...<br>Running it with --help or -h option.'
+        UsageDisplay
+        exit 2
         ;;
 esac

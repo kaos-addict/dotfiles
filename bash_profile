@@ -8,10 +8,8 @@ if [ -d "$HOME/.local/bin" ] ; then
 	export PATH
 fi
 
-#PS1='\u@\h:\w\$ '
 # colored prompt
 PS1='\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]\$ '
-
 
 EDITOR='nano'
 PAGER='less -EM'
@@ -19,6 +17,6 @@ PAGER='less -EM'
 export PS1 EDITOR PAGER
 
 umask 022
+
 # Source bashrc file if present for compatibility
 if [ -f .bashrc ]; then source .bashrc;fi
-
