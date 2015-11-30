@@ -119,16 +119,13 @@ PkgPostInstall() {
 }
 
 AskCustom() {
+        # Ask for custom repo file content
         ${yad} --text="A custom repo file has been found and the corresponding directory exist too; should I add this repo to /etc/pacman.conf ?" --text-info --filename=${K_Dir}/${Distrib}.custom.repo --editable 
 }
 
 AddCustomRepo() {
-        Repodir=$(grep "Server =" ${K_Dir}/${Distrib}.custom.repo | cut -d "=" -f2 | sed 's# file://##') && [ -d ${Repodir} ] && AskCustom || return 1
-        if [ "$?" = "0" ];then
-                kdesu -c "cat ${K_Dir}/${Distrib}.custom.repo >> /etc/pacman.conf "
-        else
-                return 1
-        fi
+        Repodir=$(grep "Server =" ${K_Dir}/${Distrib}.custom.repo | cut -d "=" -f2 | sed 's# file://##')
+        [ -d ${Repodir} ] && $(AskCustom) >>/etc/pacman.conf
 }
 
 ### Main script launching Functions

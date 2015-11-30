@@ -1,16 +1,44 @@
 #!/bin/bash
 # Simple installer for few dot files
-# TODO: Put basic files (bashrc) then add distrib specific one (kaos/kaos.bashrc) in ${TargetDir}.bashrc
+# Put basic files (bashrc) then add distrib specific one (kaos/kaos.bashrc) in ${TargetDir}.bashrc
 #                 (bash_aliases)                         (kaos/kaos.bash_aliases) in ${TargetDir}.bash_aliases
-# Then add Desktop ones
-# Need only distrib name as arg (must be the same as folder's name)
+# Then add Desktops ones
 # For now this script is specific to me on my KaOS Linux system and is targeted to quick restore my desktop environment
 # But it should be adaptable and usable for more/any linux distro next.
+
+Usage=$(cat << EOF
+$0 [Step] [--only]
+Each Step include the Steps before, where Steps are:
+        postinstall: 
+                                Update system, update few system adjustements and install some needed and optionaly extras packages.
+        bashinstall: 
+                                Install personnalized bashrc, bash_aliases, bash-functions and optionaly some prompt adds and boosts.
+        userinstall: 
+                                Restore your personnal backup and preferences.
+        etcinstall: 
+                                Restore system's backup and preferences.
+
+        --postinstall | -p : Run all restoration steps even they have already been ran.
+        
+        --bashinstall | -b : Run all restoration steps from bashinstall even if they have been already ran.
+        
+        --userinstall | -u : Run all restoration steps from userinstall even if they have been already ran.
+        
+        --etcinstall | -e : Run all restoration steps from etcinstall even if they have been already ran.
+        
+Then if you add the --only or -o as second arg, it will run only the named Step
+e.g: 
+$ $0 --bashinstall --only # or
+$ $0 -b -o
+will run only the bashinstall step, even if it has been already ran.
+EOF
+)
 
 TargetDir="${HOME}"
 RunDir="$(dirname $0)"
 yad=$(which yad)
 DesktopList="Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4"
+WinIcon="${RunDir}/pix/Restore.svg"
 
 # First verify we can dialog thru X
 if [ -z "$(which yad)" ] && [ -z $(which kdialog) ] && [ -z $(which zenity) ];then
@@ -18,21 +46,7 @@ if [ -z "$(which yad)" ] && [ -z $(which kdialog) ] && [ -z $(which zenity) ];th
         exit 1
 fi
 
-# For now this just verify we are on a KaOS system but it shoud next identify which distrib it is
-if [ -f /etc/lsb-release ]
-then
-        Distrib=$(grep "DISTRIB_ID=" /etc/lsb-release | cut -d '=' -f 2)
-        if [ "${Distrib}" = "KaOS" ] && [  -d ${RunDir}/Distrib/KaOS ] && [ -d ${RunDir}/Desktops/Plasma ] ;then
-                _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
-                _Desktop=Plasma
-        elif [ "${Distrib}" = "Manjaro" ] && [  -d ${RunDir}/Distrib/Manjaro ];then
-                _echo="${yad} --title='${Distrib} Dotfiles Restore' --text"
-                _Desktop=$(AskDesktop)
-        fi
-else 
-        echo "/etc/lsb-release file not found... Exiting..."
-        exit 1
-fi
+Dial=$($(which yad) || $(which zenity) || $(which kdialog))
 
 # Create some memory file
 Confile="$HOME/.config/${Distrib}-restore.log"
@@ -42,16 +56,65 @@ fi
 
 # Error message
 _error() {
-        kdialog --error "$1"
+        if [ "${Dial}" = "yad" ];then
+                yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}"
+        elif [ "${Dial}" = "zenity" ] || [ "${Dial}" = "qarma" ];then
+                zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}"
+        elif [ "${Dial}" = "kdialog" ];then
+                kdialog --error "$1"
+        else
+                echo -e "$1"
+        fi         
 }
 
 # Error message and exit
 _errorexit() {
-        kdialog --error "$1" && exit 0;
+        if [ "${Dial}" = "yad" ];then
+                yad --title="$(basename $0 .sh)" --text="$1" --image=gtk-error --nobuttons --button:Ok:0 --window-icon="${WinIcon}" && exit 0;
+        elif [ "${Dial}" = "zenity" ] || [ "${Dial}" = "qarma" ];then
+                zenity --text="$1" --no-label="Ok" --window-icon="${WinIcon}" && exit 0;
+        elif [ "${Dial}" = "kdialog" ];then
+                kdialog --error "$1" && exit 0;
+        else
+                echo -e "$1" && exit 0;
+        fi         
 }
 
 # Make copy with .ori backup
 cpb() { cp $@{,.ori} ;}
+
+# For now this just verify we are on a KaOS system but it shoud next identify which distrib it is
+if [ -f /etc/lsb-release ]
+then
+        Distrib=$(grep "DISTRIB_ID=" /etc/lsb-release | cut -d '=' -f 2)
+        case ${Distrib} in
+        "KaOS") if [  -d ${RunDir}/Distrib/KaOS ] && [ -d ${RunDir}/Desktops/Plasma ] ;then
+                                _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
+                                _Desktop=Plasma
+                        else
+                                _errorexit "Sorry but Distribution can't be identified or some folders are missing..."
+                        fi
+        "Manjaro")if [  -d ${RunDir}/Distrib/Manjaro ];then
+                                        _echo="${yad} --title='${Distrib} Dotfiles Restore' --text"
+                                        _Desktop=$(AskDesktop)
+                                 else
+                                        _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
+                                fi
+        "Debian")if [  -d ${RunDir}/Distrib/Debian ];then
+                                        _echo="${yad} --title='${Distrib} Dotfiles Restore' --text"
+                                        _Desktop=$(AskDesktop)
+                                else
+                                        _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
+                                fi
+        "Ubuntu")if [  -d ${RunDir}/Distrib/Ubuntu ];then
+                                        _echo="$(which zenity) --title='${Distrib} Dotfiles Restore' --text"
+                                        _Desktop=$(AskDesktop)
+                                else
+                                        _errorexit "Sorry Distribution $Distrib is not yet supported, give a help..."
+                                fi
+        *) echo "/etc/lsb-release file not found, or distribution cannot be identified... Exiting..."
+        exit 1
+fi
 
 # Once identified it should run the appropriate distrib specific install-script
 _postinstall() {
@@ -137,7 +200,7 @@ _gitconf() {
     if  [ -n ${Email} ];then sed -i "s/EMAIL/${Email}/g" ${TargetDir}/.gitconfig;fi
 }
 
-_configinstall() {
+_userinstall() {
 # VARIABLES
 Savef=mermouy.dot
 Sext=tar.bz2
@@ -168,18 +231,32 @@ _istatus() {
 Steps=( '_postinstall' '_bashinstall' '_configinstall' '_etcinstall' )
 Steps2do=( $(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null) )
 
-case $1 in
-        --postinstall|-p) 
-        for Act in "_bashinstall  _configinstall _etcinstall" 
+case "$1" in
+        "--postinstall" | "-p") if [ -z "$2" ];then
+        for Act in "_bashinstall  _userinstall _etcinstall" 
                 do ${Act} ${Distrib} || _error "Errors happened while ${Act}"
-        done 
+        done
+        elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
+                _postinstall ${Distrib} || _error "Errors happened while running post-install process."
+        fi
         ;;
-        --config|-c)  
-        for Act in " _configinstall _etcinstall" 
+        "--bashinstall" | "-b") if [ -z "$2" ];then
+        for Act in "_bashinstall  _userinstall _etcinstall" 
                 do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}"
         done 
+        elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
+                _bashinstall ${Distrib} || _error "Errors happened while running post-install process."
+        fi
         ;;
-        system|-s)
+        "--userinstall" | "-u") if [ -z "$2" ];then
+        for Act in " _userinstall _etcinstall" 
+                do $(${Act}) ${Distrib} || _error "Errors happened while ${Act}"
+        done 
+        elif [ "$2" = "--only" ] || [ "$2" = "-o" ];then
+                _bashinstall ${Distrib} || _error "Errors happened while running post-install process."
+        fi
+        ;;
+        "--etcinstall" | "-e")
         _etcinstall ${Distrib} || _error "Errors happened"
         ;;
         *) 
