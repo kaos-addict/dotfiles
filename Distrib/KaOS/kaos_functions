@@ -1,10 +1,24 @@
 ### functions@kaos:
 # Create new kcp package basics need pkgname as argument:
 mkpkg() {
-    if [ -z "$1" ] || [ -d "./$1" ];then exit 1;fi
-    mkdir "$1" && cd "$1" && pckcp -gc && sed -i "s/kaos-pkgbuild-proto/$1/g" PKGBUILD
-    echo -e "#$1\n" > README.md
-    kate -n README.md PKGBUILD
+g_hub=git@github.com
+api_url="https://api.github.com/user/repos"
+_com=".commented" # Comment this and uncomment next line to get uncommented version of files
+#_com=""
+c=${_com:1:1}
+    if [ -n "$1" ] && [ ! -d "./$1" ];then
+        _user=$(git config --get user.name)
+        curl -u "${_user}" ${api_url}} -d $(echo "'{"name":"XX"}'" | sed "s/XX/$1/") && \
+        git clone ${g_hub}:${_user}/$1.git
+        [ ! -d "./$1" ] && mkdir -p "$1"
+# Get PKGBUILD proto file
+        cd "$1" && pckcp -g${c} && sed -i "s/kaos-pkgbuild-proto/$1/g" PKGBUILD
+# Get README proto file
+        wget https://raw.githubusercontent.com/kaos-addict/kaos-helpers/master/README.md${_com}.kaos.proto -O README.md
+    sed -i "s/# NAME/# $1/" > README.md
+        kate -n README.md PKGBUILD & return 0
+    else echo "No arg given or $1 folder exists, exiting..."
+    fi
 }
 
 # Update/Create local pacman repo using /etc/makepkg.conf $PKGDEST value and hardlinks them to destination/
