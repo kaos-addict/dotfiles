@@ -31,7 +31,12 @@ pstatus() {
 }
 
 ostatus() {
-         [ -z "$(kcp -Nl | grep -e "^$1$" 2>/dev/null)" ] && echo 'PACMAN octopi-panel' || echo 'KCP /usr/share/icons/octopi.png'
+        if [ -z "$(grep -e "^$1$" /tmp/Kcp-list.tmp 2>/dev/null)" ] && [ -n "$(${_pac} -Qq $1 2>/dev/null)" ];then
+            echo 'PACMAN octopi-panel' 
+        elif [ -z "$(grep -e "^$1$" /tmp/Kcp-list.tmp 2>/dev/null)" ] && [ -z "$(${_pac} -Qq $1 2>/dev/null)" ];then
+            echo 'KCP /usr/share/icons/octopi.png'
+        else echo 'PIP3 /usr/share/icons/midna/apps/scalable/python-idle.sgv'
+        fi
 }
 
 FirstUpdate() {
@@ -84,6 +89,9 @@ ToInstall() {
         # Keep one non-variable
         pp="${ppb}"
         rm -f /tmp/KaOS-restore.tmp
+        # Create kcp list cache
+        [ -f /tmp/Kcp-list.tmp ] && rm /tmp/Kcp-list.tmp
+        kcp -Nl > /tmp/Kcp-list.tmp
         for app in $(tr '\n' ' ' < ${t_file})
         do
                 # First echo to file
