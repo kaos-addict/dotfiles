@@ -1,4 +1,4 @@
-### Terminal:
+### TextAndFiles:
 # Add folder to path if not already exported
 pathadd() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
@@ -12,7 +12,6 @@ if [ -d $HOME/bin ];then pathadd $HOME/bin;fi
 # Make copy with .ori backup
 cpb() { cp $@{,.ori} ;}
 
-### Text
 # Find text in any file (find grep)
     fgr() {
     find . -name "${2:-*}" | xargs grep -l "$1"
@@ -24,41 +23,21 @@ replace () {
     map s/$a/$b/,@t;open(W,">$f");print W @t;close(W)}' "$@"
 }
 
-### Utilities
-# Extract any archive file
-ex() {
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)  tar xf $1      ;;
-            *.tar.gz)   tar xf $1      ;;
-            *.bz2)      bunzip2 $1      ;;
-            *.rar)      rar x $1        ;;
-            *.gz)       gunzip $1       ;;
-            *.tar)      tar xf $1       ;;
-            *.tbz2)     tar xf $1      ;;
-            *.tgz)      tar xf $1      ;;
-            *.zip)      unzip $1        ;;
-            *.Z)        uncompress $1   ;;
-            *)          echo "'$1' cannot be extracted via extract()" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
+clean_dirnames() {
+    for FILE in *; do
+    NEWFILE="$(echo $FILE | \
+        sed -e 'y#QWERTYUIOPASDFGHJKLZXCVBNM#qwertyuiopasdfghjklzxcvbnm#
+                s#[^_.a-z0-9]#_#g
+                s#__*#_#g
+                s#^_##')"
+    if [ x"$FILE" = x"$NEWFILE" ]; then
+        continue
     fi
+    if [ -z $NEWFILE ]; then NEWFILE="_"; fi
+    mv --backup=t -v -- "$FILE" "$NEWFILE"
+    done
 }
-
-# Delete missing files of a m3u playlist
-purgem3u() {
-  for m3u in "$@"; do
-  local tmp=$(mktemp)
-  echo $tmp $m3u
-  while read f
-    do
-      [ -f "$f" ] && echo "$f"
-    done < "$m3u" > $tmp
-    mv $tmp $m3u
-  done
-}
-### :Terminal
+### :TextAndFiles
 
 ### Network:
 # Copy directory over ssh as: pussh Myfolder ~/Myremotefolder example.com
@@ -67,7 +46,7 @@ pussh(){
 }
 
 # Create ssh tunnel as: createTunnel user host.com localport remoteport 
-createTunnel() {
+CreateTunnel() {
   if [ $# -eq 3 ]
   then
     user=$1
@@ -102,7 +81,7 @@ espeak "$PHOST is up" >/dev/null 2>&1
 }
 ### :Network
 
-### Man pages:
+### Man-Pages:
 # Search
 mans () {
     man $1 | grep -iC2 --color=always $2 | less
@@ -125,9 +104,43 @@ man() {
 	LESS_TERMCAP_us=$(printf "\e[1;36m") \
 	man "$@"
 }
-### :Man Pages
+### :Man-Pages
 
-### Various Helpers:
+### Utilities:
+# Extract any archive file
+ex() {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)  tar xf $1      ;;
+            *.tar.gz)   tar xf $1      ;;
+            *.bz2)      bunzip2 $1      ;;
+            *.rar)      rar x $1        ;;
+            *.gz)       gunzip $1       ;;
+            *.tar)      tar xf $1       ;;
+            *.tbz2)     tar xf $1      ;;
+            *.tgz)      tar xf $1      ;;
+            *.zip)      unzip $1        ;;
+            *.Z)        uncompress $1   ;;
+            *)          echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Delete missing files of a m3u playlist
+purgem3u() {
+  for m3u in "$@"; do
+  local tmp=$(mktemp)
+  echo $tmp $m3u
+  while read f
+    do
+      [ -f "$f" ] && echo "$f"
+    done < "$m3u" > $tmp
+    mv $tmp $m3u
+  done
+}
+
 colors() {
 	local fgc bgc vals seq0
 
@@ -154,7 +167,7 @@ colors() {
 		echo; echo
 	done
 }
-### :Various Helpers
+### :Utilities
 
 ### Administration:
 # Journald display helper
@@ -198,3 +211,8 @@ do
 done
 exit 0
 }
+### :Administration
+
+### YadHelpers:
+
+###:YadHelpers
