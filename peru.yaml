@@ -10,8 +10,12 @@ imports:
         BashIt: prompt/bash-it
         Progress: prompt/progress
         WorkShop: prompt/workshop
-        PacApt: pacapt/
-        
+        PacApt: pacapt
+        Md2Man: go-md2man
+
+git module Md2Man:
+        url: git://github.com/cpuguy83/go-md2man
+
 git module Liquidprompt:
         url: git://github.com/nojhan/liquidprompt
 
