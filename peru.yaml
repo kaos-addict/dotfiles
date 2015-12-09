@@ -1,17 +1,18 @@
 imports:
-        Liquidprompt: prompt/liquidprompt/
+        Liquidprompt: prompt/liquidprompt
         Powerline: prompt/powerline/powerline
-        Fonts: fonts/
+        Fonts: fonts
         PureGetopt: prompt/pure-getopt
         Composure: prompt/composure
         BashManager: prompt/bashmanager
         BashFul: prompt/bashful
         Bocker: prompt/bocker
         BashIt: prompt/bash-it
-        Progress: prompt/progress
+        Progress: apps/cmdline/progress
         WorkShop: prompt/workshop
-        PacApt: pacapt/
-        
+        PacApt: apps/pacapt
+        Ghizmo: apps/cmdline/ghizmo
+
 git module Liquidprompt:
         url: git://github.com/nojhan/liquidprompt
 
@@ -46,3 +47,6 @@ git module WorkShop:
 
 git module PacApt:
         url: git://github.com/icy/pacapt
+
+git module Ghizmo:
+        url: https://github.com/jlevy/ghizmo
