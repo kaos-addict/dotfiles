@@ -1,0 +1,115 @@
+#!/bin/bash
+# Script to play starbound from ramfs and save it back when closed
+License='Public Domain'
+
+##################
+### VARIABLES: ###
+
+G_name=StarBound
+Xmsg="kdialog --title $(basename $0) --icon htop"
+G_path="/run/media/mermouy/HOME_MANJARO/mermouy/.local/share/StarBound"
+G_dest="/home/mermouy/.local/share/StarBound"
+
+### :VARIABLES ###
+##################
+
+##################
+### FUNCTIONS: ###
+
+[ -f $HOME/.config/$(basename $0).cfg ] && source $HOME/.config/$(basename $0).cfg
+
+if [ -z ${G_path} ];then
+    G_path=$(kdialog --title 'Choose game sources folder' --dontagain "$HOME/.config/$(basename $0).cfg:G_path" --getexistingdirectory "$HOME" )
+    G_dest=$(kdialog --title 'Create and choose destination folder' --dontagain "$HOME/.config/$(basename $0).cfg:G_dest" --getexistingdirectory "$HOME/.local/share")
+fi
+
+Erexit() {
+    kdialog --error "$1"
+    sudo umount ${G_dest} >/dev/null 2>&1
+    sudo rm -rf /dev/ram1
+    exit 0;
+}
+
+Confirm() {
+    ${Xmsg} --yesno "You attributed actually ${RamAmount} Mo to Starbound.<br>Click 'Go' if you agree, and 'Change', if you wanna change this amount:" --yes-label "Go" --no-label "Change"
+    echo $?
+}
+
+GetRamAmount() {
+RamTotAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $2 ;}')
+RamAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $4 ;}' | sed 's/..$/00/')
+RamRequ=$(du -sm ${G_path} | awk '{print $1}' | sed 's/..$//')
+RamRequired=$(echo $(( ${RamRequ} + 1 )) | sed 's/$/00')
+
+RamAmount=$(${Xmsg} --slider "Choose target ramfs amount (in Mo):<br>Total available Ram: ${RamTotAvailable} Mo<br>Actually Available Ram: ${RamAvailable} Mo<br>Minimum Required Ram: ${RamRequired} Mo" ${RamRequired} ${RamAvailable} 200)
+
+if [ -z "${RamAmount}" ];then
+    Erexit 'Bad Ram Amount or operation canceled... Exiting.'
+fi
+echo ${RamAmount}
+}
+
+# Wait for pid to finish
+waiton() {
+    pid=$1
+    me="$(basename $0)($$):"
+    if [ -z "$pid" ]
+    then
+        echo "$me a PID is required as an argument" >&2
+        exit 2
+    fi
+
+    name=$(ps -p $pid -o comm=)
+    if [ $? -eq 0 ]
+    then
+        echo "$me waiting for PID $pid to finish ($name)"
+        while ps -p $pid > /dev/null; do sleep 5; done;
+    else
+        echo "$me failed to find process with PID $pid" >&2
+        exit 1
+    fi
+}
+
+CreateFS() {
+        [ -z $1 ] && return 1
+        RamAmount=${RamAmount}000
+        sudo mkfs -q /dev/ram1 ${RamAmount} &&  ${Xmsg} --msgbox 'RamFs Created successfully!'
+return 0 || return 1
+}
+
+### :FUNCTIONS ###
+##################
+
+####################
+### MAIN SCRIPT: ###
+
+GetRamAmount 
+while [ "$(Confirm ${RamAmount})" != "0" ];do
+    GetRamAmount
+done
+
+## Create ramfs:
+CreateFS ${RamAmount} || Erexit 'Failed to create the ${RamAmount} RamFS, or wrong password... Exiting.'
+
+## Create folder and delete ir if existing:
+if [ -d "${G_dest}" ];then
+    rm -rf "${G_dest}"
+fi
+mkdir -p "${G_dest}"
+
+## Mount created FS:
+sudo mount /dev/ram1 ${G_dest} || Erexit "Error while mounting ramfs: ${G_dest}... Exiting."
+sudo chown -R $USER:users ${G_dest}
+    
+## Copy game folder to created ramfs:
+rsync -Pr ${G_path}/ ${G_dest} || Erexit 'Failed to sync folders... Exiting.'
+
+## Run game:
+cd ${G_dest}/linux64/
+./starbound && rsync -Prc ${G_dest}/ ${G_path} --exclude 'lost+found' || Erexit 'Error while saving Game folder to source folder'
+cd $HOME
+
+# Unmount folder
+sudo umount ${G_dest} || Erexit "Unable to unmount ${G_dest}, please try manually later running:<br>sudo umount  ${G_dest}"
+sudo rm -rf /dev/ram1 && ${Xmsg} --msgbox "Starbound folder has been successfully saved and unmounted... Exiting" 
+exit 0
