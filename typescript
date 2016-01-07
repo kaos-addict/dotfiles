@@ -1,0 +1,1432 @@
+Le script a débuté sur ven. 01 janv. 2016 03:22:26 CET
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ find . -type f ! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kscript --help
+
+Utilisation :
+ script [options] [fichier]
+
+Créer une transcription d'une session d'un terminal.
+
+Options :
+ -a, --append             ajouter à la sortie
+ -c, --command <commande> exécuter commande plutôt qu'un interpréteur interactif
+ -e, --return             renvoyer le code de sortie du processus fils
+ -f, --flush              exécuter flush après chaque écriture
+     --force              utiliser le fichier de sortie même si c'est un lien
+ -q, --quiet              mode silencieux
+ -t, --timing[=<fichier>] afficher les données temporelles sur la sortie
+                           d'erreur standard (ou vers <fichier>)
+ -V, --version            afficher les informations de version et quitter
+ -h, --help               afficher cette aide et quitter
+
+
+Consultez script(1) pour obtenir des précisions complémentaires.
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ man script
+[?1049h[?1h=SCRIPT(1)                                                          User Commands                                                          SCRIPT(1)[m
+[m
+[1mNAME[0m[m
+       script - make typescript of terminal session[m
+[m
+[1mSYNOPSIS[0m[m
+       [1mscript[0m [options] [[4mfile[24m][m
+[m
+[1mDESCRIPTION[0m[m
+       [1mscript[0m  makes a typescript of everything displayed on your terminal.  It is useful for students who need a hardcopy record of an interactive[m
+       session as proof of an assignment, as the typescript file can be printed out later with [1mlpr[0m(1).[m
+[m
+       If the argument [4mfile[24m is given, [1mscript[0m saves the dialogue in this [4mfile[24m.  If no filename is given, the dialogue is saved  in  the  file  [1mtype‐[0m[m
+       [1mscript[0m.[m
+[m
+[1mOPTIONS[0m[m
+       [1m-a[0m, [1m--append[0m[m
+              Append the output to [4mfile[24m or to [1mtypescript[0m, retaining the prior contents.[m
+[m
+       [1m-c[0m, [1m--command[0m [4mcommand[24m[m
+[7m Manual page script(1) line 1 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Run  the  [4mcommand[24m  rather than an interactive shell.  This makes it easy for a script to capture the output of a program that behaves[m
+[7m Manual page script(1) line 2 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              differently when its stdout is not a tty.[m
+[7m Manual page script(1) line 3 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 4 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-e[0m, [1m--return[0m[m
+[7m Manual page script(1) line 5 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Return the exit code of the child process.  Uses the same format as bash termination on signal termination exit code is 128+n.[m
+[7m Manual page script(1) line 6 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 7 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-f[0m, [1m--flush[0m[m
+[7m Manual page script(1) line 8 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Flush output after each write.  This is nice for telecooperation: one person does `mkfifo foo; script -f foo', and another can super‐[m
+[7m Manual page script(1) line 9 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              vise real-time what is being done using `cat foo'.[m
+[7m Manual page script(1) line 10 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 11 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m--force[0m[m
+[7m Manual page script(1) line 12 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Allow  the  default  output destination, i.e. the typescript file, to be a hard or symbolic link.  The command will follow a symbolic[m
+[7m Manual page script(1) line 13 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              link.[m
+[7m Manual page script(1) line 14 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 15 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-q[0m, [1m--quiet[0m[m
+[7m Manual page script(1) line 16 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Be quiet (do not write start and done messages to either standard output or the typescript file).[m
+[7m Manual page script(1) line 17 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 18 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-t[0m, [1m--timing[0m[=[4mfile[24m][m
+[7m Manual page script(1) line 19 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Output timing data to standard error, or to [4mfile[24m when given.  This data contains two fields, separated by a space.  The  first  field[m
+[7m Manual page script(1) line 20 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              indicates  how  much  time  elapsed since the previous output.  The second field indicates how many characters were output this time.[m
+[7m Manual page script(1) line 21 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              This information can be used to replay typescripts with realistic typing and output delays.[m
+[7m Manual page script(1) line 22 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 23 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-V[0m, [1m--version[0m[m
+[7m Manual page script(1) line 24 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Display version information and exit.[m
+[7m Manual page script(1) line 25 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 26 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       [1m-h[0m, [1m--help[0m[m
+[7m Manual page script(1) line 27 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              Display help text and exit.[m
+[7m Manual page script(1) line 28 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 29 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[1mNOTES[0m[m
+[7m Manual page script(1) line 30 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       The script ends when the forked shell exits (a [4mcontrol-D[24m for the Bourne shell ([1msh[0m(1)), and [4mexit[24m, [4mlogout[24m or [4mcontrol-d[24m (if  [4mignoreeof[24m  is  not[m
+[7m Manual page script(1) line 31 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       set) for the C-shell, [1mcsh[0m(1)).[m
+[7m Manual page script(1) line 32 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 33 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       Certain  interactive commands, such as [1mvi[0m(1), create garbage in the typescript file.  [1mscript[0m works best with commands that do not manipulate[m
+[7m Manual page script(1) line 34 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       the screen, the results are meant to emulate a hardcopy terminal.[m
+[7m Manual page script(1) line 35 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 36 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       It is not recommended to run [1mscript[0m in non-interactive shells. The inner shell of [1mscript[0m is always interactive, and this could lead to unex‐[m
+[7m Manual page script(1) line 37 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       pected  results.  If  you  use [1mscript[0m in the shell initialization file, you have to avoid entering an infinite loop. Use e. g. profile file,[m
+[7m Manual page script(1) line 38 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       which is read by login shells only:[m
+[7m Manual page script(1) line 39 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 40 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              if test -t 0 ; then[m
+[7m Manual page script(1) line 41 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K                  script[m
+[7m Manual page script(1) line 42 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K                  exit[m
+[7m Manual page script(1) line 43 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              fi[m
+[7m Manual page script(1) line 44 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 45 (press h for help or q to quit)[27m[K[K [K^X^X[K[7m Manual page script(1) line 45 (press h for help or q to quit)[27m[K[K[?1l>[?1049l]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ exit
+
+Script terminé sur ven. 01 janv. 2016 03:23:21 CET
+K[K [KESCESC[KOO[KBB[K       Certain  interactive commands, such as [1mvi[0m(1), create garbage in the typescript file.  [1mscript[0m works best with commands that do not manipulate[m
+[7m Manual page script(1) line 34 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       the screen, the results are meant to emulate a hardcopy terminal.[m
+[7m Manual page script(1) line 35 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 36 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       It is not recommended to run [1mscript[0m in non-interactive shells. The inner shell of [1mscript[0m is always interactive, and this could lead to unex‐[m
+[7m Manual page script(1) line 37 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       pected  results.  If  you  use [1mscript[0m in the shell initialization file, you have to avoid entering an infinite loop. Use e. g. profile file,[m
+[7m Manual page script(1) line 38 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K       which is read by login shells only:[m
+[7m Manual page script(1) line 39 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 40 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              if test -t 0 ; then[m
+[7m Manual page script(1) line 41 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K                  script[m
+[7m Manual page script(1) line 42 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K                  exit[m
+[7m Manual page script(1) line 43 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K              fi[m
+[7m Manual page script(1) line 44 (press h for help or q to quit)[27m[K[K [KESCESC[KOO[KBB[K[m
+[7m Manual page script(1) line 45 (press h for help or q to quit)[27m[K[K [K^X^X[K[7m Manual page script(1) line 45 (press h for help or q to quit)[27m[K[K[?1l>[?1049l]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ exit
+Script terminé, le fichier est typescript
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay 
+apps/               bash_functions      Desktops/           fonts/              .gitmodules         pix/                RestoreMySystem.sh
+bash_aliases        bash_profile        Distrib/            .git/               perso/              prompt/             typescript
+bash_colors         bashrc              etc/                .gitignore          peru.yaml           README.md           
+[mermouy@mermouykaos dotfiles]$ scriptreplay typescript 
+scriptreplay: fichier de déroulement temporel typescript : 0 : format inattendu
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay typescript [Kscriptreplay typescript [Kreplay 
+scriptreplay: mauvais nombre d'arguments
+
+Utilisation :
+scriptreplay [-t] fichier_déroulement_temporel [script_enregistré] [diviseur]
+
+Rejouer un enregistrement du terminal fait par script, en utilisant les informations temporelles.
+
+Options :
+ -t, --timing <fic.>     écrire le fichier de déroulement temporel en sortie
+ -s, --typescript <fic.> écrire le fichier de la session de terminal en sortie
+ -d, --divisor <nombre>  accélérer ou décélérer l'exécution avec un diviseur de temps
+ -m, --maxdelay <nombre> attendre au plus ce temps en seconde entre les mises à jour
+ -V, --version           afficher les informations de version et quitter
+ -h, --help              afficher cette aide et quitter
+
+
+Consultez scriptreplay(1) pour obtenir des précisions complémentaires.
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay typescript [C[1@-[C[1@t[1@ 
+scriptreplay: fichier de déroulement temporel typescript : 0 : format inattendu
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay -t typescript [C[1@1[1@0[1@ 
+scriptreplay: impossible d'ouvrir 10: Aucun fichier ou dossier de ce type
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay -t 10 typescript [1@:[1@3[1@0
+scriptreplay: impossible d'ouvrir 10:30: Aucun fichier ou dossier de ce type
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay -t 10:30 typescript [3P[C[C[C[C[C[C[C[C[C[C[C[C[3P[C[C[C[C[C[C[C[C[C[C[C[Ktypescript 
+scriptreplay: fichier de déroulement temporel typescript : 0 : format inattendu
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay typescript ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ scriptreplay typescript [9@-t 10:30 [C[C[C[C[C[C[C[C[C[C[C[3P[C[C[C[C[C[C[C[C[C[C[C[C[3P[C[C[C[C[C[C[C[C[C[C[C[Ktypescript [Kreplay find . -type f ! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[47P-name "*.DS_Store" -delete! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[46P-name "*.directory" -delete! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Crm trace.trace [Kfind . -type f ! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[46P-name "*.directory" -delete! -name "*.mp3" | grep -v "ogg" | grep -v wav | grep -v png | grep -v jpg^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo RestoreMySystem.sh [1@b[1@a[1@s[1@h[1@ [1@-[1@x[1@ 
+Mot de passe :
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=
++ break
++ '[' -z '' ']'
++ echo -e 'Error...\nYou need at least one of '\''yad zenity kdialog xdialog'\'' to run this script...\nExiting...'
+Error...
+You need at least one of 'yad zenity kdialog xdialog' to run this script...
+Exiting...
++ exit 1
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ echo ''
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ grep DISTRIB_ID= /etc/lsb-release
+++ cut -d = -f 2
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ sed 's# file://##'
+++ cut -d = -f2
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/mirrorlist /etc/pacman.conf
++ cp -v /etc/mirrorlist /etc/pacman.conf /etc/mirrorlist /etc/pacman.conf.ori
+cp: la cible « /etc/pacman.conf.ori » n'est pas un répertoire
++ kdesu kate /etc/mirrorlist /etc/pacman.conf
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ + kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:./Distrib/KaOS/KaOS-post-install.sh: ligne 55 : read: Erreur de lecture : 0 : Erreur d'entrée/sortie
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 1 '!=' 0 ']'
++ exit 0
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ export User=mermouy
++ User=mermouy
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ cut -d = -f 2
+++ grep DISTRIB_ID= /etc/lsb-release
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root/mermouy
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/mermouy/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ sed 's# file://##'
+++ cut -d = -f2
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/mermouy/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/mirrorlist /etc/pacman.conf
++ cp -v /etc/mirrorlist /etc/pacman.conf /etc/mirrorlist /etc/pacman.conf.ori
+cp: la cible « /etc/pacman.conf.ori » n'est pas un répertoire
++ kdesu kate /etc/mirrorlist /etc/pacman.conf
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ + kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:./Distrib/KaOS/KaOS-post-install.sh: ligne 55 : read: Erreur de lecture : 0 : Erreur d'entrée/sortie
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ + Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 1 '!=' 0 ']'
++ exit 0
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ export User=mermouy
++ User=mermouy
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ cut -d = -f 2
+++ grep DISTRIB_ID= /etc/lsb-release
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root/mermouy
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/mermouy/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
+++ cut -d = -f2
+++ sed 's# file://##'
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/mermouy/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/mirrorlist
++ cp -v /etc/mirrorlist /etc/mirrorlist.ori
+cp: impossible d'évaluer « /etc/mirrorlist »: Aucun fichier ou dossier de ce type
++ cpb /etc/pacman.conf
++ cp -v /etc/pacman.conf /etc/pacman.conf.ori
++ kdesu kate /etc/mirrorlist /etc/pacman.conf
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ + kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:./Distrib/KaOS/KaOS-post-install.sh: ligne 56 : read: Erreur de lecture : 0 : Erreur d'entrée/sortie
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ + '[' 1 '!=' 0 ']'
++ exit 0
+^C^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ export User=mermouy
++ User=mermouy
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ grep DISTRIB_ID= /etc/lsb-release
+++ cut -d = -f 2
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root/mermouy
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/mermouy/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ sed 's# file://##'
+++ cut -d = -f2
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/mermouy/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/pacman.d/mirrorlist
++ cp -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.ori
++ cpb /etc/pacman.conf
++ cp -v /etc/pacman.conf /etc/pacman.conf.ori
++ kdesu kate /etc/pacman.d/mirrorlist /etc/pacman.conf
++ kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+
+++ date -I
++ echo -e '2016-01-01\nupdate'
+./Distrib/KaOS/KaOS-post-install.sh: ligne 56: /root/mermouy/.config/KaOS-restore.log: Aucun fichier ou dossier de ce type
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 '!=' 0 ']'
++ kdesu -c 'konsole -e  pacman -Syy --noconfirm && pacman -S base-devel kcp gtk3 hicolor-icon-theme intltool --needed --noconfirm'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+avertissement : autoconf-2.69-3 est à jour -- ignoré
+avertissement : automake-1.15-2 est à jour -- ignoré
+avertissement : bin86-0.16.21-1 est à jour -- ignoré
+avertissement : binutils-2.25.1-2 est à jour -- ignoré
+avertissement : bison-3.0.4-1 est à jour -- ignoré
+avertissement : docbook-xml-4.5-9 est à jour -- ignoré
+avertissement : docbook-xsl-1.79.0-1 est à jour -- ignoré
+avertissement : ed-1.12-1 est à jour -- ignoré
+avertissement : fakeroot-1.20.2-1 est à jour -- ignoré
+avertissement : flex-2.6.0-1 est à jour -- ignoré
+avertissement : gcc-4.9.3-2 est à jour -- ignoré
+avertissement : libtool-2.4.6-4 est à jour -- ignoré
+avertissement : m4-1.4.17-2 est à jour -- ignoré
+avertissement : make-4.1-1 est à jour -- ignoré
+avertissement : patch-2.7.5-1 est à jour -- ignoré
+avertissement : pkg-config-0.29-1 est à jour -- ignoré
+avertissement : kcp-0.81.2-1 est à jour -- ignoré
+avertissement : hicolor-icon-theme-0.15-1 est à jour -- ignoré
+
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : la validation de la transaction a échoué (erreur de la bibliothèque de téléchargement)
++ read -p 'Wait for install to finnish then hit enter: '
+Wait for install to finnish then hit enter: + KcPkgList=yad
++ kcp -u
+[1;31mImpossible de lancer le programme en mode administrateur ![m
++ '[' 1 '!=' 0 ']'
++ exit 0
++ « /etc/pacman.d/mirrorlist » '->' « /etc/pacman.d/mirrorlist.ori » « /etc/pacman.conf » '->' « /etc/pacman.conf.ori » :: Il y a 16 membres dans le groupe base-devel : :: Dépôt core '1)' autoconf '2)' automake '3)' bin86 '4)' binutils '5)' bison '6)' docbook-xml '7)' docbook-xsl '8)' ed '9)' fakeroot '10)' flex '11)' gcc '12)' libtool '13)' m4 '14)' make '15)' patch '16)' pkg-config Entrez une sélection '(par' défaut, tout est 'sélectionné):' résolution des dépendances... recherche des conflits entre paquets... Paquet '(7)' Nouvelle version Changement net Taille du téléchargement main/at-spi2-atk 2.18.1-1 0,19 MiB 0,05 MiB main/at-spi2-core 2.18.3-1 1,85 MiB 0,22 MiB main/colord 1.2.12-1 3,41 MiB 0,52 MiB main/libgusb 0.2.8-1 0,45 MiB 0,05 MiB core/perl-xml-parser 2.44-2 0,44 MiB 0,14 MiB main/gtk3 3.18.6-1 43,78 MiB 6,51 MiB core/intltool 0.51.0-1 0,18 MiB 0,04 MiB Taille totale du téléchargement : 7,52 MiB Taille totale installée : 50,30 MiB :: Procéder à l’installation '?' '[O/n]' :: Récupération des paquets... Des erreurs se sont produites, aucun paquet n’a été mis à jour.
+RestoreMySystem.sh: ligne 335: « /etc/pacman.d/mirrorlist »: Aucun fichier ou dossier de ce type
++ _error 'Error while "_postinstall"'
++ '[' /usr/bin/kdialog = /usr/bin/yad ']'
++ '[' /usr/bin/kdialog = /usr/bin/zenity ']'
++ '[' /usr/bin/kdialog = qarma ']'
++ '[' /usr/bin/kdialog = /usr/bin/kdialog ']'
++ kdialog --error 'Error while "_postinstall"'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ export User=mermouy
++ User=mermouy
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ grep DISTRIB_ID= /etc/lsb-release
+++ cut -d = -f 2
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root/mermouy
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/mermouy/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ sed 's# file://##'
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
+++ cut -d = -f2
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/mermouy/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/pacman.d/mirrorlist
++ cp -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.ori
++ cpb /etc/pacman.conf
++ cp -v /etc/pacman.conf /etc/pacman.conf.ori
++ kdesu kate /etc/pacman.d/mirrorlist /etc/pacman.conf
++ kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+
+++ date -I
++ echo -e '2016-01-01\nupdate'
+./Distrib/KaOS/KaOS-post-install.sh: ligne 56: /root/mermouy/.config/KaOS-restore.log: Aucun fichier ou dossier de ce type
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Aborting aboutToFinish handling.
++ Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 '!=' 0 ']'
++ kdesu -c 'konsole -e  pacman -Syy --noconfirm && pacman -S base-devel kcp gtk3 hicolor-icon-theme intltool --needed --noconfirm'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+avertissement : autoconf-2.69-3 est à jour -- ignoré
+avertissement : automake-1.15-2 est à jour -- ignoré
+avertissement : bin86-0.16.21-1 est à jour -- ignoré
+avertissement : binutils-2.25.1-2 est à jour -- ignoré
+avertissement : bison-3.0.4-1 est à jour -- ignoré
+avertissement : docbook-xml-4.5-9 est à jour -- ignoré
+avertissement : docbook-xsl-1.79.0-1 est à jour -- ignoré
+avertissement : ed-1.12-1 est à jour -- ignoré
+avertissement : fakeroot-1.20.2-1 est à jour -- ignoré
+avertissement : flex-2.6.0-1 est à jour -- ignoré
+avertissement : gcc-4.9.3-2 est à jour -- ignoré
+avertissement : libtool-2.4.6-4 est à jour -- ignoré
+avertissement : m4-1.4.17-2 est à jour -- ignoré
+avertissement : make-4.1-1 est à jour -- ignoré
+avertissement : patch-2.7.5-1 est à jour -- ignoré
+avertissement : pkg-config-0.29-1 est à jour -- ignoré
+avertissement : kcp-0.81.2-1 est à jour -- ignoré
+avertissement : hicolor-icon-theme-0.15-1 est à jour -- ignoré
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « perl-xml-parser-2.44-2-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « intltool-0.51.0-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « libgusb-0.2.8-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « colord-1.2.12-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis kaos.youm.org : Could not resolve host: kaos.youm.org
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis nyxi.eu : Could not resolve host: nyxi.eu
+erreur : échec de récupération du fichier « gtk3-3.18.6-1-x86_64.pkg.tar.xz » depuis kaosx.tk : Could not resolve host: kaosx.tk
+avertissement : erreur lors de la récupération de certains fichiers
+erreur : la validation de la transaction a échoué (erreur de la bibliothèque de téléchargement)
++ read -p 'Wait for install to finnish then hit enter: '
+Wait for install to finnish then hit enter: ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ ^C
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ sudo bash -x RestoreMySystem.sh 
++ AskUserName
+++ kdialog --title RestoreMySystem.sh --inputbox 'Please enter user name for which this should be installed: ' user
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ User=mermouy
++ '[' 0 '!=' 0 ']'
++ '[' -z mermouy ']'
++ '[' mermouy = user ']'
++ '[' mermouy = root ']'
++ '[' '!' -d /home/mermouy ']'
++ export User=mermouy
++ User=mermouy
++ TargetDir=/home/mermouy
+++ dirname RestoreMySystem.sh
++ RunDir=.
++ DesktopList='Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4'
++ WinIcon=./pix/Restore.svg
++ Steps=('_postinstall' '_bashinstall' '_configinstall' '_etcinstall')
++ RestoreImg=./pix/Restore-Logo
++ Confile=/home/mermouy/.config/RestoreMySystem.sh.log
++ Dialist='yad zenity kdialog xdialog'
++ for app in '${Dialist}'
+++ which yad
++ Dial=
++ for app in '${Dialist}'
+++ which zenity
++ Dial=
++ for app in '${Dialist}'
+++ which kdialog
++ Dial=/usr/bin/kdialog
++ break
++ '[' -z /usr/bin/kdialog ']'
++ [[ 0 -ne 0 ]]
++ '[' '!' -f ./bash_colors ']'
++ . ./bash_colors
+++ C_Off='\e[0m'
+++ Black='\e[0;30m'
+++ Red='\e[0;31m'
+++ Green='\e[0;32m'
+++ Yellow='\e[0;33m'
+++ Blue='\e[0;34m'
+++ Purple='\e[0;35m'
+++ Cyan='\e[0;36m'
+++ White='\e[0;37m'
+++ BBlack='\e[1;30m'
+++ BRed='\e[1;31m'
+++ BGreen='\e[1;32m'
+++ BYellow='\e[1;33m'
+++ BBlue='\e[1;34m'
+++ BPurple='\e[1;35m'
+++ BCyan='\e[1;36m'
+++ BWhite='\e[1;37m'
+++ UBlack='\e[4;30m'
+++ URed='\e[4;31m'
+++ UGreen='\e[4;32m'
+++ UYellow='\e[4;33m'
+++ UBlue='\e[4;34m'
+++ UPurple='\e[4;35m'
+++ UCyan='\e[4;36m'
+++ UWhite='\e[4;37m'
+++ On_Black='\e[40m'
+++ On_Red='\e[41m'
+++ On_Green='\e[42m'
+++ On_Yellow='\e[43m'
+++ On_Blue='\e[44m'
+++ On_Purple='\e[45m'
+++ On_Cyan='\e[46m'
+++ On_White='\e[47m'
+++ IBlack='\e[0;90m'
+++ IRed='\e[0;91m'
+++ IGreen='\e[0;92m'
+++ IYellow='\e[0;93m'
+++ IBlue='\e[0;94m'
+++ IPurple='\e[0;95m'
+++ ICyan='\e[0;96m'
+++ IWhite='\e[0;97m'
+++ BIBlack='\e[1;90m'
+++ BIRed='\e[1;91m'
+++ BIGreen='\e[1;92m'
+++ BIYellow='\e[1;93m'
+++ BIBlue='\e[1;94m'
+++ BIPurple='\e[1;95m'
+++ BICyan='\e[1;96m'
+++ BIWhite='\e[1;97m'
+++ On_IBlack='\e[0;100m'
+++ On_IRed='\e[0;101m'
+++ On_IGreen='\e[0;102m'
+++ On_IYellow='\e[0;103m'
+++ On_IBlue='\e[0;104m'
+++ On_IPurple='\e[0;105m'
+++ On_ICyan='\e[0;106m'
+++ On_IWhite='\e[0;107m'
++ '[' '!' -f /home/mermouy/.config/RestoreMySystem.sh.log ']'
++ GetDistrib
++ '[' -f /etc/lsb-release ']'
+++ cut -d = -f 2
+++ grep DISTRIB_ID= /etc/lsb-release
++ Distrib=KaOS
++ case ${Distrib} in
++ '[' -d ./Distrib/KaOS ']'
++ '[' -d ./Desktops/Plasma ']'
++ _echo='kdialog --title "KaOS Dotfiles Restore" --msgbox'
++ _Desktop=Plasma
++ case "$1" in
++ AskWhat2run
++ Steps2do=($(kdialog --title "What should we do?" --checklist "Choose the step(s) which should be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null))
+++++ _istatus post
++++++ grep post /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus bash
++++++ grep bash /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus perso
++++++ grep perso /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++++ _istatus sys
++++++ grep sys /home/mermouy/.config/RestoreMySystem.sh.log
+++++ '[' -n '' ']'
+++++ echo on
++++ echo on
+++ kdialog --title 'What should we do?' --checklist 'Choose the step(s) which should be run: ' _postinstall 'Post Installation and update.' on _bashinstall 'Bash files installation' on _configinstall 'Config files and personnal files restoration.' on _etcinstall 'System files restoration' on
++ for a in '${Steps2do[@]}'
+++ eval '"_postinstall"' KaOS
++++ _postinstall KaOS
++++ case "$1" in
++++ DistribDir=./Distrib/KaOS
++++ '[' -f ./Distrib/KaOS/KaOS-post-install.sh ']'
++++ chmod +x ./Distrib/KaOS/KaOS-post-install.sh
++++ KaOS_postinstall
++++ '[' 0 = 0 ']'
++++ bash -x ./Distrib/KaOS/KaOS-post-install.sh
++ TargetDir=/root/mermouy
+++ dirname ./Distrib/KaOS/KaOS-post-install.sh
++ K_Dir=./Distrib/KaOS
+++ dirname ./Distrib/KaOS
++ RunDir=./Distrib
++ Distrib=KaOS
++ IFile=/root/mermouy/.config/KaOS-restore.log
++ _pac=pacman
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ Dial='kdialog --title=KaOS-post-install'
+++ basename ./Distrib/KaOS/KaOS-post-install.sh .sh
++ yad='yad --icon-theme=midna --window-icon=kaos.svg --title=KaOS-post-install --center --text-align=fill --selectable-labels'
++ '[' -f ./Distrib/KaOS/KaOS.custom.repo ']'
++ AddCustomRepo
+++ sed 's# file://##'
+++ cut -d = -f2
+++ grep 'Server =' ./Distrib/KaOS/KaOS.custom.repo
++ Repodir='/media/Remise/MonKaos '
++ '[' -d /media/Remise/MonKaos ']'
++ '[' '!' -f /root/mermouy/.config/KaOS-restore.log ']'
++ FirstUpdate
++ kdialog --title=KaOS-post-install --yesno 'Do you want to edit your pacman and mirrorlist files to make first update faster?\n(you can safely skip this phase if you are in USA)\nThis script will continue when you close the editor.'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 = 0 ']'
++ cpb /etc/pacman.d/mirrorlist
++ cp -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.ori
++ cpb /etc/pacman.conf
++ cp -v /etc/pacman.conf /etc/pacman.conf.ori
++ kdesu kate /etc/pacman.d/mirrorlist /etc/pacman.conf
++ kdesu -c 'konsole -e mirror-check' -c 'konsole -e pacman -Suyy'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
++ read -p 'Wait for update to finnish then hit enter:'
+Wait for update to finnish then hit enter:QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+
+++ date -I
++ echo -e '2016-01-01\nupdate'
+./Distrib/KaOS/KaOS-post-install.sh: ligne 56: /root/mermouy/.config/KaOS-restore.log: Aucun fichier ou dossier de ce type
++ _error 'Problem encountered while updating system'
++ kdialog --error 'Problem encountered while updating system'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ Basepkglist='base-devel kcp gtk3 hicolor-icon-theme intltool'
++ kdialog --title=KaOS-post-install --yesno 'This script need these few librairies to run at is best: <p><b>base-devel kcp gtk3 hicolor-icon-theme intltool</b><p>Should we install them now? (Script will end if not...)' --yes-label Install --no-label 'Cancel & exit'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
++ '[' 0 '!=' 0 ']'
++ kdesu -c 'konsole -e  pacman -Syy --noconfirm && pacman -S base-devel kcp gtk3 hicolor-icon-theme intltool --needed --noconfirm'
+QDBusConnection: session D-Bus connection created before QCoreApplication. Application may misbehave.
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+avertissement : autoconf-2.69-3 est à jour -- ignoré
+avertissement : automake-1.15-2 est à jour -- ignoré
+avertissement : bin86-0.16.21-1 est à jour -- ignoré
+avertissement : binutils-2.25.1-2 est à jour -- ignoré
+avertissement : bison-3.0.4-1 est à jour -- ignoré
+avertissement : docbook-xml-4.5-9 est à jour -- ignoré
+avertissement : docbook-xsl-1.79.0-1 est à jour -- ignoré
+avertissement : ed-1.12-1 est à jour -- ignoré
+avertissement : fakeroot-1.20.2-1 est à jour -- ignoré
+avertissement : flex-2.6.0-1 est à jour -- ignoré
+avertissement : gcc-4.9.3-2 est à jour -- ignoré
+avertissement : libtool-2.4.6-4 est à jour -- ignoré
+avertissement : m4-1.4.17-2 est à jour -- ignoré
+avertissement : make-4.1-1 est à jour -- ignoré
+avertissement : patch-2.7.5-1 est à jour -- ignoré
+avertissement : pkg-config-0.29-1 est à jour -- ignoré
+avertissement : kcp-0.81.2-1 est à jour -- ignoré
+avertissement : hicolor-icon-theme-0.15-1 est à jour -- ignoré
++ read -p 'Wait for install to finnish then hit enter: '
+Wait for install to finnish then hit enter: 
++ KcPkgList=yad
++ sudo -u kcp -u
+sudo : l'option requiert un argument -- u
+usage: sudo -h | -K | -k | -V
+usage: sudo -v [-AknS] [-g group] [-h host] [-p prompt] [-u user]
+usage: sudo -l [-AknS] [-g group] [-h host] [-p prompt] [-U user] [-u user] [command]
+usage: sudo [-AbEHknPS] [-C num] [-g group] [-h host] [-p prompt] [-u user] [VAR=value] [-i|-s] [<command>]
+usage: sudo -e [-AknS] [-C num] [-g group] [-h host] [-p prompt] [-u user] file ...
++ '[' 1 '!=' 0 ']'
++ exit 0
++ « /etc/pacman.d/mirrorlist » '->' « /etc/pacman.d/mirrorlist.ori » « /etc/pacman.conf » '->' « /etc/pacman.conf.ori » :: Il y a 16 membres dans le groupe base-devel : :: Dépôt core '1)' autoconf '2)' automake '3)' bin86 '4)' binutils '5)' bison '6)' docbook-xml '7)' docbook-xsl '8)' ed '9)' fakeroot '10)' flex '11)' gcc '12)' libtool '13)' m4 '14)' make '15)' patch '16)' pkg-config Entrez une sélection '(par' défaut, tout est 'sélectionné):' résolution des dépendances... recherche des conflits entre paquets... Paquet '(7)' Nouvelle version Changement net Taille du téléchargement main/at-spi2-atk 2.18.1-1 0,19 MiB 0,05 MiB main/at-spi2-core 2.18.3-1 1,85 MiB 0,22 MiB main/colord 1.2.12-1 3,41 MiB 0,52 MiB main/libgusb 0.2.8-1 0,45 MiB 0,05 MiB core/perl-xml-parser 2.44-2 0,44 MiB 0,14 MiB main/gtk3 3.18.6-1 43,78 MiB 6,51 MiB core/intltool 0.51.0-1 0,18 MiB 0,04 MiB Taille totale du téléchargement : 7,52 MiB Taille totale installée : 50,30 MiB :: Procéder à l’installation '?' '[O/n]' :: Récupération des paquets... téléchargement de perl-xml-parser-2.44-2-x86_64.pkg.tar.xz... téléchargement de intltool-0.51.0-1-x86_64.pkg.tar.xz... téléchargement de libgusb-0.2.8-1-x86_64.pkg.tar.xz... téléchargement de colord-1.2.12-1-x86_64.pkg.tar.xz... téléchargement de at-spi2-core-2.18.3-1-x86_64.pkg.tar.xz... téléchargement de at-spi2-atk-2.18.1-1-x86_64.pkg.tar.xz... téléchargement de gtk3-3.18.6-1-x86_64.pkg.tar.xz... vérification de l’intégrité des paquets... analyse de l’intégrité des paquets... chargement des fichiers des paquets... recherche des conflits entre fichiers... vérification de l’espace disque disponible... installation de libgusb... installation de colord... installation de at-spi2-core... installation de at-spi2-atk... installation de gtk3... installation de perl-xml-parser... installation de intltool...
+RestoreMySystem.sh: ligne 335: « /etc/pacman.d/mirrorlist »: Aucun fichier ou dossier de ce type
++ _error 'Error while "_postinstall"'
++ '[' /usr/bin/kdialog = /usr/bin/yad ']'
++ '[' /usr/bin/kdialog = /usr/bin/zenity ']'
++ '[' /usr/bin/kdialog = qarma ']'
++ '[' /usr/bin/kdialog = /usr/bin/kdialog ']'
++ kdialog --error 'Error while "_postinstall"'
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Aborting aboutToFinish handling.
+]0;mermouy@mermouykaos:/home/mermouy/dotfiles[mermouy@mermouykaos dotfiles]$ exit
+
+Script terminé sur ven. 01 janv. 2016 04:17:46 CET

@@ -1,0 +1,219 @@
+### functions@kaos:
+
+# Needed by next functions, echo yes if http:// or https:// or git@ is detected in arg, else echo no
+isurl() {
+if [ -n "$(echo ${1} | grep "http://\|https://\|git@" )" ];then
+    echo yes && return 0
+else echo no && return 1
+fi
+}
+
+# Create new repo on github.com, can create empty repo, or push yours on github
+g_create() {
+
+# Be sure we don't run fancy ls and grep
+    alias ls=/usr/bin/ls
+    alias grep=/usr/bin/grep
+    
+    repo_name=$1
+    dir_name=`basename $(pwd)`
+    g_hub="git@github.com"
+    g_raw="https://raw.githubusercontent.com"
+    _com=".commented"
+    c=${_com:1:1}
+    
+# X Dialogs functions
+    _entry="kdialog --title=$0 --inputbox"
+    _error="kdialog --error"
+    
+# Verify arg or ask for repo name
+    if [ "${repo_name}" = "" ]; then
+        while [ -z "${repo_name}" ];do
+            repo_name="$(${_entry} "Repository name to create?" "")"
+            [ "$?" != "0" ] && return 1
+        done
+    fi
+
+# Get credentials from git config
+    user_name=`git config github.user`
+    if [ "${user_name}" = "" ]; then
+        ${_error} "Could not find username, to create one, run 'git config --global github.user <username>'"
+        return 1
+    fi
+
+# Get github token
+    token=`git config github.token`
+    if [ "${g_token}" = "" ]; then
+        ${_error} "Could not find token, run 'git config --global github.token <token>'"
+        return 1
+    fi
+    
+    if [ "$(basename $PWD)" = "${repo_name}" ];then
+        if [ "$(curl -u "${user_name}:${g_token}" https://api.github.com/user/repos -d '{"name":"'${repo_name}'"}' | grep "Validation Failed")" ];then
+            kdialog --error "Unable to create repo ${repo_name} for user ${user_name}" # Should be fifo to get output in xdialog
+            return 1
+        fi
+    else mkdir ${repo_name} && cd ${repo_name} || { 
+        kdialog --error "Unable to change directory to ${repo_name}"
+        return 1 
+        }
+        if [ "$(curl -u "${user_name}:${g_token}" https://api.github.com/user/repos -d '{"name":"'${repo_name}'"}' | grep "Validation Failed")" ];then
+            kdialog --error "Unable to create repo ${repo_name} for user ${user_name}" # Should be fifo to get output in xdialog
+            return 1
+        fi
+    fi
+
+# Add remote origin or init repo
+    git remote remove origin || git init >/dev/null 2>&1
+    git remote add origin git@github.com:${user_name}/${repo_name}.git || { 
+        kdialog --error "Unable to create repo at git@github.com:${user_name}/${repo_name}.git"
+        return 1
+        }
+    if [ -z "$(ls)" ];then
+        touch Readme.md
+        
+# Add Readme.md file to git
+        git add Readme.md || { 
+            kdialog --error "Unable add Readme.md file to git"
+            return 1
+            }
+
+# First commit
+        git commit -m "Initial commit from mkpkg" || { 
+            kdialog --error "Unable to first commit to git@github.com:${user_name}/${repo_name}.git"
+            return 1
+            }
+    fi
+
+# First push
+    git push -u origin master || {
+        kdialog --error "Unable to push repo to git@github.com:${user_name}/${repo_name}.git"
+        return 1
+        }
+        
+    kdialog --yesno "Code pushed to remote. \nYour newly created git repository can be found at: \nhttps://github.com/${repo_name}\nClick 'Next' to create basic files."
+    [ "$?" = "0" ] && return 0
+    export repo_name=${repo_name}
+}
+
+# Create new kcp package repo and basics files TODO: seperate file?
+# Use like: mkpkg <sourcesurl>
+#           mkpkg <appname>
+#
+# Where <sourceurl> is a github repo address or a source tarball
+# And <appname> is just the name of an app you would like to create a pkg for
+#
+# It will: 
+# _If repo not existing: 
+#           Create a new repo for appname in KCP,
+#           download and/or create basic commented files in ./appname folder.
+# _If repo exists:
+#           Clone existing KCP repo and open files & proto files for editing 
+mkpkg() {
+# Be sure we don't run fancy ls and grep
+    alias ls=/usr/bin/ls
+    alias grep=/usr/bin/grep
+    
+    repo_name=""
+
+# If no default XEDITOR then use kate
+    [ -z "$XEDITOR" ] && XEDITOR=/usr/bin/kate
+    input=$@
+
+# Arg given
+    if [ -n "${input}" ];then
+        if [ "$(isurl "${input}")" = "yes" ];then
+        
+# Supports github repo as input
+            if [ -n "$(echo "${input}" | grep github.com)" ];then
+                repo_url=${input}
+                
+# Detect https protcol
+                if [ $(echo ${input} | grep "https://github.com/*" ) ];then
+                    repo_auth="$(echo ${input} | sed 's#https://github.com##' | cut -d '/' -f2)"
+                    repo_name=`basename "$(echo ${input} | sed 's#https://github.com/##' | cut -d '/' -f3)" .git`
+                    
+# If https https detected, translate to ssh
+                    if [ $(kdialog --yesno \
+    "A Kcp package should be cloned via ssh, $FUNCNAME support only ssh mode...\nShould I translate address and continue with ssh?\nRepository will be at: git@github.com/KaOS-Community-Packages/${repo_name}.git") = "0" ];then
+                        repo_url="git@github.com/KaOS-Community-Packages/${repo_name}.git"
+                        continue
+                    else exit 1
+                    fi
+            
+# Detect git protocol
+                elif [ $(echo ${input} | grep "git@github.com/*" ) ] || [ $(echo ${repo_url} | grep "git@github.com/*" ) ];then
+                    repo_auth="$(echo ${input} | sed 's#git@github.com##' | cut -d '/' -f2)"
+                    repo_name=`basename "$(echo ${input} | sed 's#git@github.com:##' | cut -d '/' -f3)" .git`
+                fi 
+
+# Detect kcp address, or same user, clone repo & edit files, close this script
+                if [ "${repo_auth}" = "KaOS-Community-Packages" ] || [ "${repo_auth}" = "$(git config github.user)" ];then
+                    git clone ${repo_url} && cd ${repo_name} && $XEDITOR -n README.md PKGBUILD & return 0
+
+                else git clone ${repo_url} && cd ${repo_name} && g_create ${repo_name} && $XEDITOR -n README.md PKGBUILD && return 0 || { 
+                    kdialog --error "Unable to clone given repo, is a folder named ${repo_name} exists?" 
+                    return 1
+                    }
+                fi
+            else kdialog --title="$FUNCNAME" --error "Github.com repo not detected but url detected repo from outside github not supported for now..."
+                return 1
+            fi
+            
+# Arg is not an url, create new empty repo
+        elif [ ! -z ${input} ] && repo_name=${input} && [ ! -d ${repo_name} ];then
+            if [ -n "$(echo ${input} | grep '/')" ];then
+                kdialog --error "Protocol not supported or bad argument"
+                return 1
+            else g_create $1 || return 1
+            
+# Get PKGBUILD proto file (hopefully pckcp takes care of this for us:)
+                pckcp -g${c} && sed -i "s/PKGNAME/${repo_name}/g" PKGBUILD
+            
+# Get README proto file
+                wget ${g_raw}/kaos-addict/kaos-helpers/master/README.md${_com}.kaos.proto -O README.md
+                sed -i "s/# PKGNAME/# ${repo_name}/" README.md
+                kate -n README.md PKGBUILD & disown            
+                return 0
+            fi
+
+# Arg not detected
+        else kdialog --error "Unable to evaluate argument"
+            return 1
+        fi
+        
+# No arg given
+    else kdialog --error "No arg given or ${repo_name} folder exists, exiting..."
+        return 1
+    fi
+}
+
+# Update/Create local pacman repo using /etc/makepkg.conf $PKGDEST value and hardlinks them to destination/
+# It also support git push if repo detected as a git repo
+# Needs existing and writable destination folder as argument or will exit.
+pkg2repo() {
+if [ $(which qarma) ];then
+    [ -n "${1}" ] && [ -d ${1} ] && [ -w ${d} ] || return 1
+    Odir="$(pwd)"
+    cd ${1} && Dir="$(pwd)" && cd ${Odir} || return 1
+    source /etc/makepkg.conf || return 1
+    for pkg in $(find $PKGDEST/ -type f -name "*.pkg.tar.xz")
+        do  echo "Found: $(basename ${pkg} .pkg.tar.xz)"
+    done | sort | qarma --title="Packages To Repo" --window-icon="octopi" \
+    --width=800 --height=600 --ok-label="Add to repo" --text-info --checkbox="Add these packages to repo: [$(basename ${1})] (${Dir})?"
+    if [ "$?" = "0" ];then
+         for pkg in $(find $PKGDEST/ -type f -name "*.pkg.tar.xz")
+             do ln -s ${pkg} ${Dir}/$(basename ${pkg})
+         done
+        repo-add -n -d --nocolor "${Dir}/$(basename ${Dir}).db.tar.xz" $(find ${Dir} -type l -name "*.pkg.tar.xz") 2>&1 | qarma --title="Packages To Repo" --window-icon="octopi" --width=800 --height=600 --text-info --auto-scroll ||  return 1
+        repo-add -f --nocolor "${Dir}/$(basename ${Dir}).files.tar.xz" $(find ${Dir} -type l -name "*.pkg.tar.xz") 2>&1 | qarma --title="Packages To Repo" --window-icon="octopi" --width=800 --height=600 --text-info --auto-scroll ||  return 1
+    else
+        qarma --error --title="Packages To Repo" --window-icon="octopi" --text="Cancelled by user..." --ok-label=Exit --timeout=3
+        return 1
+    fi
+else
+        echo "Need Zenity or qarma... Exiting."
+        return 1
+fi
+}
+

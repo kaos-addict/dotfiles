@@ -1,6 +1,11 @@
-### Personal shortcuts:
-# Rsyncs
+###########################
+### Personal shortcuts: ###
+
+# Music sync
 alias ziksync='rsync -r -t -v --progress --delete --size-only -l --partial -z -s --exclude '*.wav' /media/Data/Musique/ youm:/home/mermouy/Musique'
 
 # Make renpy novels able to launch their own player
 alias renpy-noplayer="export RENPY_BASE=''"
+
+### :Personal shortcuts ###
+###########################
