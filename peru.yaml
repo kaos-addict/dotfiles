@@ -10,16 +10,11 @@ imports:
         BashIt: prompt/bash-it
         Progress: apps/cmdline/progress
         WorkShop: prompt/workshop
-<<<<<<< HEAD
         PacApt: apps/pacapt
         Ghizmo: apps/cmdline/ghizmo
-
-=======
-        PacApt: pacapt
         Md2Man: go-md2man
         ShipIt: shipit
   
->>>>>>> origin/boost_mkpkg_function
 git module Liquidprompt:
         url: git://github.com/nojhan/liquidprompt
 
@@ -37,6 +32,7 @@ git module Composure:
 
 git module BashManager:
         url: git://github.com/lingtalfi/bashmanager.git
+        
 git module BashFul:
         url: git://github.com/jmcantrell/bashful.git
         
@@ -55,13 +51,11 @@ git module WorkShop:
 git module PacApt:
         url: git://github.com/icy/pacapt
 
-<<<<<<< HEAD
 git module Ghizmo:
         url: https://github.com/jlevy/ghizmo
-=======
+
 git module Md2Man:
         url: git://github.com/cpuguy83/go-md2man
 
 git module ShipIt:
         url: git ://github.com/sapegin/shipit
->>>>>>> origin/boost_mkpkg_function
