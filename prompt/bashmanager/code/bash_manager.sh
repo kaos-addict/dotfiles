@@ -1,0 +1,1 @@
+bash_manager_core-1.08.sh

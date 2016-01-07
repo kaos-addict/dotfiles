@@ -48,12 +48,6 @@ alias rmv="rsync --partial --progress --append --remove-sent-files"
 # Directory listing
 alias ldir="ls -l | egrep '^d'"
 
-# Make coloured grep
-#alias grep='grep -i --color'
-
-# Get off comments
-alias cgrep="grep -E -v '^(#|$|;)'"
-
 # Show me my ssh public keys
 alias ssh-showkeys="tail +1 ~/.ssh/*.pub"
 
@@ -65,6 +59,12 @@ alias shfunct='cgrep ~/.bash_functions'
 
 # List top ten largest files/directories in current directory
 alias ducks='du -cks *|sort -rn|head -11'
+
+# Tree
+if [ ! -x "$(which tree 2>/dev/null)" ]
+then
+  alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+fi
 
 ##TODO: what's best of these two:
 # Clean comments and empty lines:

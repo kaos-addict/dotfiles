@@ -1,0 +1,5 @@
+### Man pages
+# MP via Konqueror
+kman() { 
+    konqueror --profile Kmanual man:$1 
+} 
