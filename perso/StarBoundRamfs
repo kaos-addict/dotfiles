@@ -7,8 +7,11 @@ License='Public Domain'
 
 G_name=StarBound
 Xmsg="kdialog --title $(basename $0) --icon htop"
-G_path="/run/media/mermouy/HOME_MANJARO/mermouy/.local/share/StarBound"
-G_dest="/home/mermouy/.local/share/StarBound"
+G_path=""
+G_dest=""
+# This script need few commands to run
+Needed=( 'rsync' 'kdialog' )
+User='mermouy'
 
 ### :VARIABLES ###
 ##################
@@ -16,13 +19,22 @@ G_dest="/home/mermouy/.local/share/StarBound"
 ##################
 ### FUNCTIONS: ###
 
+# Verify needed packages are present:
+for command in ${Needed[@]}
+do
+	type -p ${command} || exit 1
+done
+
+# If config file not found:
 [ -f $HOME/.config/$(basename $0).cfg ] && source $HOME/.config/$(basename $0).cfg
 
+# And variables empty, ask for source and destination folders:
 if [ -z ${G_path} ];then
     G_path=$(kdialog --title 'Choose game sources folder' --dontagain "$HOME/.config/$(basename $0).cfg:G_path" --getexistingdirectory "$HOME" )
     G_dest=$(kdialog --title 'Create and choose destination folder' --dontagain "$HOME/.config/$(basename $0).cfg:G_dest" --getexistingdirectory "$HOME/.local/share")
 fi
 
+# Display error msg and exit
 Erexit() {
     kdialog --error "$1"
     sudo umount ${G_dest} >/dev/null 2>&1
@@ -30,23 +42,25 @@ Erexit() {
     exit 0;
 }
 
+# Kdialog is not really "readable" so ask confirmation to user:
 Confirm() {
     ${Xmsg} --yesno "You attributed actually ${RamAmount} Mo to Starbound.<br>Click 'Go' if you agree, and 'Change', if you wanna change this amount:" --yes-label "Go" --no-label "Change"
     echo $?
 }
 
+# Get memory infos:
 GetRamAmount() {
-RamTotAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $2 ;}')
-RamAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $4 ;}' | sed 's/..$/00/')
-RamRequ=$(du -sm ${G_path} | awk '{print $1}' | sed 's/..$//')
-RamRequired=$(echo $(( ${RamRequ} + 1 )) | sed 's/$/00')
+	RamTotAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $2 ;}') # System total ram
+	RamAvailable=$(/usr/bin/free -m | sed '1d;3d' | awk '{ print $4 ;}' | sed 's/..$/00/') # Actually available ram
+	RamRequ=$(du -sm ${G_path} | awk '{print $1}' | sed 's/..$//') # And minimum required ram
+	RamRequired=$(echo $(( ${RamRequ} + 1 )) | sed 's/$/00/')
 
-RamAmount=$(${Xmsg} --slider "Choose target ramfs amount (in Mo):<br>Total available Ram: ${RamTotAvailable} Mo<br>Actually Available Ram: ${RamAvailable} Mo<br>Minimum Required Ram: ${RamRequired} Mo" ${RamRequired} ${RamAvailable} 200)
+	RamAmount=$(${Xmsg} --slider "Choose target ramfs amount (in Mo):<br>Total available Ram: ${RamTotAvailable} Mo<br>Actually Available Ram: ${RamAvailable} Mo<br>Minimum Required Ram: ${RamRequired} Mo" ${RamRequired} ${RamAvailable} 200)
 
-if [ -z "${RamAmount}" ];then
-    Erexit 'Bad Ram Amount or operation canceled... Exiting.'
-fi
-echo ${RamAmount}
+	if [ -z "${RamAmount}" ];then
+    	Erexit 'Bad Ram Amount or operation canceled... Exiting.'
+	fi
+	echo ${RamAmount}
 }
 
 # Wait for pid to finish
@@ -70,6 +84,7 @@ waiton() {
     fi
 }
 
+# Create host ramfs
 CreateFS() {
         [ -z $1 ] && return 1
         RamAmount=${RamAmount}000
@@ -91,7 +106,7 @@ done
 ## Create ramfs:
 CreateFS ${RamAmount} || Erexit 'Failed to create the ${RamAmount} RamFS, or wrong password... Exiting.'
 
-## Create folder and delete ir if existing:
+## Delete any existing folder:
 if [ -d "${G_dest}" ];then
     rm -rf "${G_dest}"
 fi
@@ -99,15 +114,15 @@ mkdir -p "${G_dest}"
 
 ## Mount created FS:
 sudo mount /dev/ram1 ${G_dest} || Erexit "Error while mounting ramfs: ${G_dest}... Exiting."
-sudo chown -R $USER:users ${G_dest}
+sudo chown -R $User:users ${G_dest} # Attribute to user
     
 ## Copy game folder to created ramfs:
 rsync -Pr ${G_path}/ ${G_dest} || Erexit 'Failed to sync folders... Exiting.'
 
-## Run game:
+## Run game, and rsync differences back to source folder
 cd ${G_dest}/linux64/
 ./starbound && rsync -Prc ${G_dest}/ ${G_path} --exclude 'lost+found' || Erexit 'Error while saving Game folder to source folder'
-cd $HOME
+cd
 
 # Unmount folder
 sudo umount ${G_dest} || Erexit "Unable to unmount ${G_dest}, please try manually later running:<br>sudo umount  ${G_dest}"
