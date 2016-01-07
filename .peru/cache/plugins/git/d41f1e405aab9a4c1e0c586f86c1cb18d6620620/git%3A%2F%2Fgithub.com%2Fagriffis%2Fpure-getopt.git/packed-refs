@@ -1,0 +1,3 @@
+# pack-refs with: peeled fully-peeled 
+f3da99d37a7c2839a20a436e4aa3f7d0a04478fa refs/heads/master
+b82987c21a8e16e1d13525bd432751e78392d14d refs/heads/testing-travis-ppa

@@ -1,0 +1,17 @@
+57405ec3ec4347591ad309a1ef665008a5fe798d	not-for-merge	branch '6_fix_char_escaping' of git://github.com/cpuguy83/go-md2man
+0fcf39aebcd6948a1b89cb682ee276228234768b	not-for-merge	branch 'fix_rawhtml' of git://github.com/cpuguy83/go-md2man
+71acacd42f85e5e82f70a55327789582a5200a90	not-for-merge	branch 'master' of git://github.com/cpuguy83/go-md2man
+df26bc959ef82239a1b74146504c2d4eaa64cbf2	not-for-merge	'refs/pull/1/head' of git://github.com/cpuguy83/go-md2man
+0fcf39aebcd6948a1b89cb682ee276228234768b	not-for-merge	'refs/pull/10/head' of git://github.com/cpuguy83/go-md2man
+7cefbfaa5aab6d2151947fce943e85c165266dc7	not-for-merge	'refs/pull/12/head' of git://github.com/cpuguy83/go-md2man
+626bd0ac0fb1abc03000f07e7385aa7103087623	not-for-merge	'refs/pull/14/head' of git://github.com/cpuguy83/go-md2man
+dc5b399424985c29e8ffe5fd964e0b1ce4522b44	not-for-merge	'refs/pull/5/head' of git://github.com/cpuguy83/go-md2man
+57405ec3ec4347591ad309a1ef665008a5fe798d	not-for-merge	'refs/pull/7/head' of git://github.com/cpuguy83/go-md2man
+4969172362facff532f342fd1bb90912f2b6ae97	not-for-merge	'refs/pull/8/head' of git://github.com/cpuguy83/go-md2man
+8f16d0413d75c0e1bba125416872cd209bbc2350	not-for-merge	'refs/pull/9/head' of git://github.com/cpuguy83/go-md2man
+af68b4ec8eb1932fcd3b531bfd186dcc400b61be	not-for-merge	'refs/pull/9/merge' of git://github.com/cpuguy83/go-md2man
+1147903d9a082544c799bf266699eb9affa8fe64	not-for-merge	tag 'v1' of git://github.com/cpuguy83/go-md2man
+ac953c483fd3b9183a4eb2ac343256663c5f033b	not-for-merge	tag 'v1.0.1' of git://github.com/cpuguy83/go-md2man
+16d160379d14906c4707631f1987434e95f7f7b5	not-for-merge	tag 'v1.0.2' of git://github.com/cpuguy83/go-md2man
+e69ac41993d9dad8006559d4e28763d241ab53a6	not-for-merge	tag 'v1.0.3' of git://github.com/cpuguy83/go-md2man
+71acacd42f85e5e82f70a55327789582a5200a90	not-for-merge	tag 'v1.0.4' of git://github.com/cpuguy83/go-md2man
