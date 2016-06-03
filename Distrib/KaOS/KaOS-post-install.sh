@@ -191,11 +191,14 @@ KcpFileCache() {
 
 # Very first and complete update
 FirstUpdate() {
+# TODO: 
 # Should work with fifo       Fifo=$(mktemp /tmp/KaOS-restore.XXXXXX)
-# TODO: Better control of the update/install process
+# Better control of the update/install process
 
 ## Update system
-konsole --nofork -e ${_pac} --noconfirm -Suyy & mypid=$!
+
+konsole --nofork -e "${_pac} --noconfirm -Suyy & mypid=$!"
+
 waiton ${mypid}
 echo -e "$(date -I)\nupdate">> ${IFile}
 }
@@ -302,22 +305,26 @@ AddCustomRepo() {
         
 ## Run these functions if corresponding files are found:
 # If custom repo file is found ask to add it before anything else
+
 [[ -f "${K_Dir}/${Distrib}.custom.repo" && -n $(cat "${K_Dir}/${Distrib}.custom.repo") ]] && AddCustomRepo
 
 # Verify first update has been run
+
 if [ ! -f ${IFile} ] || [ -z "$(grep "update" ${IFile} 2>/dev/null)" ];then
         FirstUpdate
         
     # Else ask to re-run?
-else ${Dial} --yesno "It seems that this script first general update has already been run,\ndo you want to run it again?<p>(Run this if you didn't upgraded your system recently.)" 
+else ${Dial} --yesno "It seems that this script first general update has already been run,\ndo you want to run it again?\n(Run this if you didn't upgraded your system recently.)" 
         [ $? = 0 ] && FirstUpdate
 fi
 
 # Verify if post-install pkgs from found list have been installed:
+
 if [ -z "$(grep post ${IFile} 2>/dev/null)" ] || [ "$1" = "--postinstall" ];then
         PkgPostInstall # || _errorexit "Error occured while post installing packages."
         
     # Else ask for re-run?
+    
 else ${Dial} --yesno "It looks like this post-install script has already been run,\nshould we run it again?\n(In case you want use this script to install more applications for example.)"
         if [ $? = 0 ];then
                 PkgPostInstall # || _errorexit "Problem occured while installing packages."
