@@ -42,7 +42,7 @@
 ################
 
 # Set target & work folders
-TargetDir=$HOME
+
 RunDir="$( cd "$(dirname "$0")" ; pwd -P )" # Best way to find script folder
 DesktopList="Plasma Enlightenment Gnome Mate Xfce Lxde Lxqt Openbox Kde4"
 WinIcon="${RunDir}/pix/Restore.svg"
@@ -136,7 +136,7 @@ _errorexit() {
 }
 
 # Make copy with .ori backup
-cpb() { cp $@{,.ori} ;}
+cpb() { cp $@{,.$(date -I).ori} ;}
 
 ### :Utils-functions #
 ######################
@@ -177,6 +177,7 @@ AskUserName() {
     elif [ ! -d "/home/${User}" ];then 
         _errorexit 'Given Username does not have a </home/username> folder... Exiting...'
     fi
+    export TargetDir="/home/${User}"
 }
 
 # For now this just verify we are on a KaOS system but it shoud next identify which distrib it is
@@ -248,40 +249,88 @@ AskDesktop() {
 
 ## Bash files
 _bashinstall() {
+
+
 # For now only restore few dotfiles but then should ask for lib to use etc...
         # Save existing files
-        if [ -f $HOME/.bashrc ];then cpb $HOME/.bashrc;fi
-        if [ -f $HOME/.bash_aliases ];then cpb $HOME/.bash_aliases;fi
-        if [ -f $HOME/.bash_functions ];then cpb $HOME/.bash_functions;fi
         
-        cat bashrc Distrib/${1}/${1}.bashrc > ${TargetDir}/.bashrc || return 1	# Copy bashrc
-        if [ -f ${RunDir}/Desktops/${_Desktop}/bash_aliases ];then
-                cat bash_aliases ${1}/${1}_aliases perso/perso_aliases Desktops/${_Desktop}/bash_aliases > ${TargetDir}/.bash_aliases
-        else
-                cat bash_aliases ${1}/${1}_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases
+        if [ -f ${TargetDir}/.bashrc ];then cpb ${TargetDir}/.bashrc
+                echo -e ${BGreen}"Bashrc Saved..."${C_Off}
         fi
-        if [ -f ${RunDir}/Desktops/${_Desktop}/bash_functions ];then
-                cat bash_functions ${1}/${1}_functions perso/perso_functions Desktops/${_Desktop}/bash_functions > ${TargetDir}/.bash_functions
-        else     
-                cat bash_functions ${1}/${1}_functions perso/perso_functions > ${TargetDir}/.bash_functions || return 1    # Create .bash_functions
+        if [ -f ${TargetDir}/.bash_aliases ];then cpb ${TargetDir}/.bash_aliases
+                echo -e ${BGreen}"Bash_aliases Saved..."${C_Off}
+        fi
+        if [ -f ${TargetDir}/.bash_functions ];then cpb ${TargetDir}/.bash_functions
+                echo -e ${BGreen}"Bash_functions Saved..."${C_Off}
         fi
         
+        cd ${RunDir}
+        
+        # Compile and copy bashrc TODO:Should detect what's available and what's not.
+        
+        if [ -f bashrc ] && [ -f Distrib/${1}/${1}_bashrc ] && [ -f perso/perso_bashrc ];then
+            cat bashrc Distrib/${1}/${1}_bashrc perso/perso_bashrc > ${TargetDir}/.bashrc || return 1
+        elif [ -f bashrc ] && [ -f Distrib/${1}/${1}_bashrc ];then
+            cat bashrc Distrib/${1}/${1}_bashrc > ${TargetDir}/.bashrc || return 1
+        elif [ -f bashrc ];then
+            cat bashrc > ${TargetDir}/.bashrc || return 1
+        else echo -e ${BRed}"No bashrc file found... Aborting..."${C_Off}
+        fi
+
+        echo -e ${BGreen}"Bashrc compiled and copied to '${TargetDir}/.bashrc'..."${C_Off}
+        
+        # Compile and copy bash_aliases
+        
+        if [ -f bash_aliases ] && [ -f Desktops/${_Desktop}/bash_aliases ] && [ -f perso/perso_aliases ] && [ -f Distrib/${1}/${1}_aliases ];then
+            cat bash_aliases Distrib/${1}/${1}_aliases Desktops/${_Desktop}/bash_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases
+        elif [ -f bash_aliases ] && [ -f perso/perso_aliases ] && [ -f Distrib/${1}/${1}_aliases ];then
+            cat bash_aliases Distrib/${1}/${1}_aliases perso/perso_aliases > ${TargetDir}/.bash_aliases
+        elif [ -f bash_aliases ] && [ -f Distrib/${1}/${1}_aliases ];then
+            cat bash_aliases Distrib/${1}/${1}_aliases > ${TargetDir}/.bash_aliases
+        elif [ -f bash_aliases ];then
+            cat bash_aliases > ${TargetDir}/.bash_aliases || return 1
+        else echo -e ${BRed}"No aliases file found... Aborting..."${C_Off}
+        
+        fi
+        
+        echo ${BGreen}"Bash aliases compiled and copied to '${TargetDir}/.bash_aliases'..."${C_Off}
+                
+        # Compile and copy bash_functions
+        
+        if [ -f bash_functions ] && [ -f Distrib/${1}/${1}_functions ] && [ -f Desktops/${_Desktop}/bash_functions ] && [ -f perso/perso_functions];then
+                cat bash_functions Distrib/${1}/${1}_functions Desktops/${_Desktop}/bash_functions perso/perso_functions > ${TargetDir}/.bash_functions
+        elif [ -f bash_functions ] && [ -f Distrib/${1}/${1}_functions ] && [ -f perso/perso_functions ];then
+                cat bash_functions Distrib/${1}/${1}_functions perso/perso_functions > ${TargetDir}/.bash_functions || return 1
+        elif [ -f bash_functions ] && [ -f Distrib/${1}/${1}_functions ];then
+                cat bash_functions Distrib/${1}/${1}_functions > ${TargetDir}/.bash_functions || return 1
+        elif [ -f bash_functions ];then
+                cat bash_functions > ${TargetDir}/.bash_functions || return 1
+        else echo -e ${BRed}"No functions file found... Aborting..."${C_Off}
+
+        fi
+        
+        echo -e ${BGreen}"Bash_functions compiled and copied to '${TargetDir}/.bash_functions'..."${C_Off}
+                
         # Want to boost bash?
-        # Awesome fonts?
-        if [ -d "${RunDir}/fonts" ];then 
-                ${yad} --text='Do you want to install extras and awesome fonts?'
-        fi
-        if  [ "$?" = "0" ];then 
-                ${_terminal} -e "./install.sh"
-        fi
-        
-        # TODO: better getopt?
+        # Awesome fonts? TODO:
+        # Complete bash boost
+        # better getopt?
         # Liquidpromt?
         # powerline?
+
         
-        if [ -f "${1}/post-${1}-install.sh" ]  
-        then echo -e ${BYellow}"Running post install script now..."${C_Off}; ./${1}/post-${1}-install.sh || return 1; fi
-    echo -e 'Dot files installed!\nBye!'
+        if [ -n "$(ls ${RunDir}/fonts/Terminal/)" ];then 
+            ${yad} --text='Do you want to install extras and awesome fonts?'
+        fi
+        
+        if  [ "$?" = "0" ];then
+            if [ -f termfont_install.sh ];then
+                ${_terminal} -e "/bin/bash termfont_install.sh"
+            else echo ${BRed}"No font fonts installation script found, aborting..."${C_Off}
+            fi
+        fi
+    echo -e ${BGreen}'Dot files installed!\nBye!'${C_Off}
+    kdialog --title "Bash files installation" --msgbox 'Bash files successfully installed!'
     return 0
 }
 
@@ -336,7 +385,7 @@ ConfigFile() {
 # If no argument given verify what's run and what's not
 AskWhat2run() {
 # Control what step to do
-Steps2do=( $(kdialog --title "What should we do?" --checklist "Choose the step(s) you wanna run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null) )
+Steps2do=( $(kdialog --title "What should we do?" --checklist "Choose the step(s) you want to be run: " _postinstall 'Post Installation and update.' $(echo $(_istatus post)) _bashinstall 'Bash files installation' $(echo $(_istatus bash)) _configinstall 'Config files and personnal files restoration.' $(echo $(_istatus perso)) _etcinstall 'System files restoration' $(echo $(_istatus sys)) 2>/dev/null) )
 }
 
 ### :Script functions #
